@@ -9,6 +9,7 @@ class TaskEditContoller: UIViewController{
     
     //UI
     private var deleteBarItem: UIBarButtonItem!
+    private var formTableView: TaskEditTableView!
     
     //MARK: - Lifecycle
     convenience init(taskProcessBehavior: TaskProcessBehavior, deletionBehavior: DeletionBehavior? = nil){
@@ -30,6 +31,7 @@ class TaskEditContoller: UIViewController{
     //MARK: - UI
     func setupUI() {
         setupDeleteBarItem()
+        setupFormTableView()
     }
     
     //MARK: Delete Bar Button
@@ -44,6 +46,36 @@ class TaskEditContoller: UIViewController{
     
     @objc func deleteBarItemPressed(){
         
+    }
+    
+    //MARK: - Form TableView
+    private func setupFormTableView(){
+        
+        let style: UITableView.Style
+        if #available(iOS 15.0, *) {
+            style = .insetGrouped
+        } else {
+            style = .grouped
+        }
+        
+        formTableView = TaskEditTableView(frame: .zero, style: style)
+        self.view.addSubview(formTableView)
+        
+        formTableView.snp.makeConstraints {[weak self] maker in
+            guard let self = self else { return }
+            maker.leading.top.trailing.equalToSuperview()
+            
+            if #available(iOS 17.0, *) {
+                self.view.keyboardLayoutGuide.usesBottomSafeArea = false
+                maker.bottom.equalTo(self.view.keyboardLayoutGuide.snp.top)
+            } else {
+                maker.bottom.equalToSuperview()
+            }
+        }
+        
+        
+        formTableView.keyboardDismissMode = .onDrag
+        formTableView.estimatedRowHeight = 40
     }
     
     //MARK: - Other

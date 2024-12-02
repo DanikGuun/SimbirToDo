@@ -1,5 +1,5 @@
 
-class TaskEditFabric{
+class TaskEditControllerFabric{
     
     public class func create(task: ToDoTask? = nil, type: TaskProcessType) -> TaskEditContoller? {
         let processBehavior: TaskProcessBehavior

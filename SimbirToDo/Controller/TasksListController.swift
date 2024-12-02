@@ -52,7 +52,7 @@ class TasksListController: UIViewController {
     }
     
     @objc private func addTaskButtonPreessed(){
-        guard let vc = TaskEditFabric.create(task: ToDoTask(), type: .edit) else { return }
+        guard let vc = TaskEditControllerFabric.create(task: ToDoTask(), type: .edit) else { return }
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
