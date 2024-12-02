@@ -3,8 +3,12 @@ import UIKit
 
 class TaskEditContoller: UIViewController{
     
+    //Behaviors
     var taskProcessBehavior: TaskProcessBehavior?
     var deletionBehavior: DeletionBehavior? { didSet { deletionBehaviorChanged() } }
+    
+    //UI
+    private var deleteBarItem: UIBarButtonItem!
     
     //MARK: - Lifecycle
     convenience init(taskProcessBehavior: TaskProcessBehavior, deletionBehavior: DeletionBehavior? = nil){
@@ -20,18 +24,30 @@ class TaskEditContoller: UIViewController{
     }
     
     func setup() {
-        self.view.backgroundColor = .gray
+        self.view.backgroundColor = .primaryContollerBackground
     }
     
     //MARK: - UI
     func setupUI() {
+        setupDeleteBarItem()
+    }
+    
+    //MARK: Delete Bar Button
+    private func setupDeleteBarItem(){
+        let image = UIImage(named: "trash")
+        deleteBarItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(deleteBarItemPressed))
+        
+        deleteBarItem.tintColor = .red
+        self.navigationItem.rightBarButtonItem = deleteBarItem
+        deletionBehaviorChanged()
+    }
+    
+    @objc func deleteBarItemPressed(){
         
     }
     
     //MARK: - Other
     private func deletionBehaviorChanged(){
-        if deletionBehavior != nil{
-            
-        }
+        self.navigationItem.rightBarButtonItem = deletionBehavior != nil ? deleteBarItem : nil
     }
 }
