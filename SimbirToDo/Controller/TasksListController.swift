@@ -5,17 +5,21 @@ import SnapKit
 class TasksListController: UIViewController {
 
     //MARK: - Lifecycle
+    convenience init(){
+        self.init(nibName: nil, bundle: nil)
+        setup()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
+        setupUI()
     }
 
     private func setup(){
         
         self.view.backgroundColor = .primaryContollerBackground
         self.navigationItem.title = "Задачи"
-        
-        setupUI()
+
     }
     
     //MARK: - UI
@@ -48,7 +52,8 @@ class TasksListController: UIViewController {
     }
     
     @objc private func addTaskButtonPreessed(){
-        
+        guard let vc = TaskEditFabric.create(type: .add) else { return }
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
