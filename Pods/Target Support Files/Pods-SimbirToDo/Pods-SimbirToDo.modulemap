@@ -1,0 +1,6 @@
+framework module Pods_SimbirToDo {
+  umbrella header "Pods-SimbirToDo-umbrella.h"
+
+  export *
+  module * { export * }
+}
