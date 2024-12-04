@@ -2,7 +2,7 @@
 import UIKit
 import SnapKit
 
-class TaskNameCell: TaskEditCell, TaskEditCellProtocol{
+class NameCell: TaskEditCell{
     typealias InfoType = String
     
     private var nameField: UITextField!
@@ -17,9 +17,10 @@ class TaskNameCell: TaskEditCell, TaskEditCellProtocol{
         nameField.snp.makeConstraints { maker in
             maker.top.bottom.equalToSuperview()
             maker.leading.trailing.equalToSuperview().inset(16)
-            maker.height.equalTo(40)
+            maker.height.equalTo(UIScreen.main.bounds.height/20)
         }
         
+        nameField.placeholder = "Название..."
     }
     
     //MARK: - EditCell Protocol

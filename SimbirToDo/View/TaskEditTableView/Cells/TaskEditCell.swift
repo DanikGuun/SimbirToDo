@@ -20,4 +20,5 @@ class TaskEditCell: UITableViewCell {
     func setupUI(){
         
     }
+
 }
