@@ -35,13 +35,14 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         dayButton.snp.makeConstraints { maker in
             maker.top.bottom.equalToSuperview().inset(6)
             maker.leading.equalToSuperview().inset(12)
-            maker.height.equalTo(30)
+            maker.height.equalTo(UIScreen.main.bounds.height/28)
         }
         
         dayButton.apply(.gray(selectedColor: .blueAction))
         dayButton.setTitle("Day", for: .normal)
         dayButton.setTitle("selected", for: .selected)
         dayButton.addTarget(self, action: #selector(dayButtonPressed), for: .touchUpInside)
+        dayButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         
         buttons.append(dayButton)
     }
@@ -65,6 +66,8 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         endTimeButton.apply(.gray(selectedColor: .blueAction))
         endTimeButton.setTitle("End", for: .normal)
         endTimeButton.addTarget(self, action: #selector(endTimeButtonPressed), for: .touchUpInside)
+        endTimeButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        
         buttons.append(endTimeButton)
     }
     
@@ -87,6 +90,8 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         startTimeButton.apply(.gray(selectedColor: .blueAction))
         startTimeButton.setTitle("Start", for: .normal)
         startTimeButton.addTarget(self, action: #selector(startTimeButtonPressed), for: .touchUpInside)
+        startTimeButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        
         buttons.append(startTimeButton)
     }
     

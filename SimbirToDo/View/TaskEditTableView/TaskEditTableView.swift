@@ -38,6 +38,7 @@ class TaskEditTableView: UITableView, UITableViewDataSource{
         self.register(DescriptionCell.self, forCellReuseIdentifier: CellID.description.rawValue)
         self.register(TimePickerCell.self, forCellReuseIdentifier: CellID.timePicker.rawValue)
         self.register(DatePickerCell.self, forCellReuseIdentifier: CellID.datePicker.rawValue)
+        self.register(ApplyCell.self, forCellReuseIdentifier: CellID.applyButotn.rawValue)
     }
     
     //
@@ -91,6 +92,11 @@ class TaskEditTableView: UITableView, UITableViewDataSource{
             
             return cell
             
+        //кнопка
+        case (1, 0):
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: CellID.applyButotn.rawValue, for: indexPath) as? ApplyCell
+            else { fallthrough }
+            return cell
         default:
             return UITableViewCell()
             
@@ -151,6 +157,7 @@ enum CellID: String{
     case datePicker = "datePicker"
     case timePicker = "timePicker"
     case description = "description"
+    case applyButotn = "applyButton"
 }
 
 //тип информации ячейки

@@ -19,6 +19,7 @@ class DescriptionCell: TaskEditCell{
         }
         
         textView.placeholder = "Заметки..."
+        textView.backgroundColor = .clear
     }
     
     //MARK: - EditCell Protocol
