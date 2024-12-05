@@ -9,6 +9,6 @@ protocol DateComponentsPickerProtocol: UITableViewCell{
 
 protocol DateComponentsPickerDelegate{
     
-    func dateComponentsPicker(didSelect dateComponents: DateComponents)
+    func dateComponentsPicker(_ picker: DateComponentsPickerProtocol, didSelect dateComponents: DateComponents)
     
 }

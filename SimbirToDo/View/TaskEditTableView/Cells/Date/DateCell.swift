@@ -14,6 +14,7 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     var delegate: DateCellDelegate?
     private var lastPickerType: DatePickerType?
     private var buttons: [UIButton] = [] //все кнопки, надо для выключения, если выбирается другая кнопка
+    private var currentInterval: DateInterval = DateInterval()
     
     //
     //MARK: - UI
@@ -39,8 +40,7 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         }
         
         dayButton.apply(.gray(selectedColor: .blueAction))
-        dayButton.setTitle("Day", for: .normal)
-        dayButton.setTitle("selected", for: .selected)
+        dayButton.setTitle("01.01.1970", for: .normal)
         dayButton.addTarget(self, action: #selector(dayButtonPressed), for: .touchUpInside)
         dayButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         
@@ -64,7 +64,7 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         }
         
         endTimeButton.apply(.gray(selectedColor: .blueAction))
-        endTimeButton.setTitle("End", for: .normal)
+        endTimeButton.setTitle("00:00", for: .normal)
         endTimeButton.addTarget(self, action: #selector(endTimeButtonPressed), for: .touchUpInside)
         endTimeButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         
@@ -88,7 +88,7 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         }
         
         startTimeButton.apply(.gray(selectedColor: .blueAction))
-        startTimeButton.setTitle("Start", for: .normal)
+        startTimeButton.setTitle("00:00", for: .normal)
         startTimeButton.addTarget(self, action: #selector(startTimeButtonPressed), for: .touchUpInside)
         startTimeButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         
@@ -120,10 +120,24 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     //MARK: - EditCell Protocol
     //
     func setInfo(_ info: DateInterval) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        let date = formatter.string(from: info.start)
         
+        formatter.dateFormat = ""
+        formatter.timeStyle = .short
+        let startTime = formatter.string(from: info.start)
+        let endTime = formatter.string(from: info.end)
+        
+        dayButton.setTitle(date, for: .normal)
+        startTimeButton.setTitle(startTime, for: .normal)
+        endTimeButton.setTitle(endTime, for: .normal)
+        
+        currentInterval = info
     }
     
     func getInfo() -> DateInterval {
-        return DateInterval()
+        return currentInterval
     }
+    
 }

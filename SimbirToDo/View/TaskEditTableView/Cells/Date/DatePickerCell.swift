@@ -29,5 +29,11 @@ class DatePickerCell: TaskEditCell, DateComponentsPickerProtocol{
         if #available(iOS 14.0, *) {
             datePicker.preferredDatePickerStyle = .inline
         }
+        datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
+    }
+    
+    @objc func dateChanged(_ datePicker: UIDatePicker){
+        let comps = Calendar.current.dateComponents([.year, .month, .day], from: datePicker.date)
+        delegate?.dateComponentsPicker(self, didSelect: comps)
     }
 }

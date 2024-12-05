@@ -73,6 +73,7 @@ class TaskEditTableView: UITableView, UITableViewDataSource{
             let cell = tableView.dequeueReusableCell(withIdentifier: CellID.date.rawValue, for: indexPath) as! DateCell
             cell.delegate = self
             infoCells[.dateInterval, default: nil] = cell as any TaskEditCellProtocol
+            cell.setInfo(DateInterval(start: Date(timeIntervalSince1970: task.dateStart), end: Date(timeIntervalSince1970: task.dateEnd)))
             return cell
         
         //Описание, если свернут/нет выбор даты
@@ -103,7 +104,41 @@ class TaskEditTableView: UITableView, UITableViewDataSource{
         }
     }
     
+    //
+    //MARK: - Service
+    //
+    
     private func setDateFromPickerCell(_ dateComponents: DateComponents){
+        guard let dateCell = infoCells[.dateInterval] as? DateCell else { return }
+        
+        let currentInterval = dateCell.getInfo()
+        var startComps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: currentInterval.start)
+        var endComps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: currentInterval.end)
+        
+        switch currentDatePickerType {
+            
+        case .date:
+            startComps.year = dateComponents.year
+            startComps.month = dateComponents.month
+            startComps.day = dateComponents.day
+            endComps.year = dateComponents.year
+            endComps.month = dateComponents.month
+            endComps.day = dateComponents.day
+        case .startTime:
+            startComps.hour = dateComponents.hour
+            startComps.minute = dateComponents.minute
+        case .endTime:
+            endComps.hour = dateComponents.hour
+            endComps.minute = dateComponents.minute
+        case nil:
+            return
+        }
+        
+        guard let newStartDate = Calendar.current.date(from: startComps) else { return }
+        guard let newEndDate = Calendar.current.date(from: endComps) else { return }
+        
+        let newInterval = DateInterval(start: newStartDate, end: newEndDate)
+        dateCell.setInfo(newInterval)
         
     }
 }
@@ -140,8 +175,8 @@ extension TaskEditTableView: DateCellDelegate{
 //
 extension TaskEditTableView: DateComponentsPickerDelegate{
     
-    func dateComponentsPicker(didSelect dateComponents: DateComponents) {
-        print(dateComponents)
+    func dateComponentsPicker(_ picker: DateComponentsPickerProtocol, didSelect dateComponents: DateComponents) {
+        self.setDateFromPickerCell(dateComponents)
     }
     
 }

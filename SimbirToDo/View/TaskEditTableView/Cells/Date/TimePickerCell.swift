@@ -1,7 +1,7 @@
 
 import UIKit
 
-class TimePickerCell: TaskEditCell, DateComponentsPickerProtocol {
+class TimePickerCell: TaskEditCell, DateComponentsPickerProtocol{
     
     var delegate: (any DateComponentsPickerDelegate)?
     private var timePicker: UIDatePicker!
@@ -25,10 +25,17 @@ class TimePickerCell: TaskEditCell, DateComponentsPickerProtocol {
             maker.edges.equalToSuperview()
         }
         
+        
         timePicker.datePickerMode = .time
         if #available(iOS 14.0, *){
             timePicker.preferredDatePickerStyle = .wheels
         }
+        timePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
+    }
+    
+    @objc func dateChanged(_ datePicker: UIDatePicker){
+        let comps = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
+        delegate?.dateComponentsPicker(self, didSelect: comps)
     }
     
 }
