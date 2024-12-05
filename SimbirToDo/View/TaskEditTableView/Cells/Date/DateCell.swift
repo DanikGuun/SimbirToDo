@@ -37,8 +37,7 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         self.contentView.addSubview(dayButton)
         
         dayButton.snp.makeConstraints { maker in
-            maker.top.bottom.equalToSuperview().inset(6)
-            maker.leading.equalToSuperview().inset(12)
+            maker.top.bottom.leading.equalToSuperview().inset(5)
             maker.height.equalTo(UIScreen.main.bounds.height/28)
         }
         
@@ -61,8 +60,8 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         self.contentView.addSubview(endTimeButton)
         
         endTimeButton.snp.makeConstraints { maker in
-            maker.top.height.equalTo(dayButton)
-            maker.trailing.equalToSuperview().inset(12)
+            maker.top.bottom.equalTo(dayButton)
+            maker.trailing.equalToSuperview().inset(5)
         }
         
         endTimeButton.apply(.gray(selectedColor: .blueAction))
@@ -85,8 +84,8 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         self.contentView.addSubview(startTimeButton)
         
         startTimeButton.snp.makeConstraints { maker in
-            maker.top.height.equalTo(dayButton)
-            maker.trailing.equalTo(endTimeButton.snp.leading).offset(-12)
+            maker.top.bottom.equalTo(dayButton)
+            maker.trailing.equalTo(endTimeButton.snp.leading).offset(-5)
         }
         
         startTimeButton.apply(.gray(selectedColor: .blueAction))

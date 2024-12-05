@@ -60,12 +60,13 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
     //
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section{
-        case 0: return isPickerExpanded ? 4 : 3
+        case 0, 2: return 1
+        case 1: return isPickerExpanded ? 2 : 1
         default: return 0
         }
     }
@@ -81,21 +82,21 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
             return cell
             
         //Дата
-        case (0, 1):
+        case (1, 0):
             let cell = tableView.dequeueReusableCell(withIdentifier: CellID.date.rawValue, for: indexPath) as! DateCell
             infoCells[.dateInterval, default: nil] = cell
             cell.delegate = self
             return cell
         
         //Описание, если свернут/нет выбор даты
-        case (0, 2) where isPickerExpanded == false, (0, 3) where isPickerExpanded == true:
+        case (2, 0):
             let cell = tableView.dequeueReusableCell(withIdentifier: CellID.description.rawValue, for: indexPath) as! DescriptionCell
             infoCells[.description, default: nil] = cell
             return cell
         
         //Выбор даты
-        case (0, 2) where isPickerExpanded == true:
-            guard let id = currentDatePickerType?.cellIdForCurrentType else { fallthrough }
+        case (1, 1):
+            guard let id = currentDatePickerType?.cellID else { fallthrough }
             guard let currentDate = currentDate else { fallthrough }
             
             guard let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath) as? any DateComponentsPickerProtocol
@@ -210,7 +211,7 @@ extension TaskEditTableView: DateCellDelegate{
         self.currentDatePickerType = type
         
         self.beginUpdates()
-        self.insertRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+        self.insertRows(at: [IndexPath(row: 1, section: 1)], with: .fade)
         self.endUpdates()
         
     }
@@ -220,7 +221,7 @@ extension TaskEditTableView: DateCellDelegate{
         self.currentDatePickerType = nil
         
         self.beginUpdates()
-        self.deleteRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+        self.deleteRows(at: [IndexPath(row: 1, section: 1)], with: .fade)
         self.endUpdates()
         
     }

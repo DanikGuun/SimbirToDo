@@ -14,7 +14,7 @@ enum DatePickerType{
     case startTime
     case endTime
     
-    var cellIdForCurrentType: String{
+    var cellID: String{
         switch self {
         case .date: return CellID.datePicker.rawValue
         case .startTime: return CellID.timePicker.rawValue
