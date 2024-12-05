@@ -100,16 +100,3 @@ class TaskEditContoller: UIViewController{
         }
     }
 }
-
-//
-//MARK: - Task Editer Delegate
-//
-extension TaskEditContoller: TaskEditerDelegate {
-    
-    func taskEditer(_ taskEditer: any TaskEditerProtocol, didFinishEditingWith info: TaskInfo) {
-        
-        taskProcessBehavior?.process(with: info)
-        
-    }
-    
-}

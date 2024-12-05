@@ -11,7 +11,6 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
     //Service
     var initialInfo: TaskInfo? //для задания начальных значений для ячеек
     var isInitialLayout = true //для того, чтобы задать значения ячейкам при первом ините
-    var taskDelegate: (any TaskEditerDelegate)?
     var currentDate: DateInterval? { //минимальное время для пикера. Чтобы конец не был раньше начала
         guard let dateCell = infoCells[.dateInterval] as? DateCell else { return nil }
         return dateCell.getInfo()
