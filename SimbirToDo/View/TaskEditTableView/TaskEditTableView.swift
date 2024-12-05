@@ -87,12 +87,6 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
             cell.delegate = self
             return cell
         
-        //Описание, если свернут/нет выбор даты
-        case (2, 0):
-            let cell = tableView.dequeueReusableCell(withIdentifier: CellID.description.rawValue, for: indexPath) as! DescriptionCell
-            infoCells[.description, default: nil] = cell
-            return cell
-        
         //Выбор даты
         case (1, 1):
             guard let id = currentDatePickerType?.cellID else { fallthrough }
@@ -100,21 +94,29 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
             
             guard let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath) as? any DateComponentsPickerProtocol
             else { fallthrough }
+            cell.delegate = self
             
             switch currentDatePickerType {
+                
             case .endTime:
                 cell.minimumDate = currentDate.start
                 cell.setDate(currentDate.end)
+                
             case .startTime, .date:
                 cell.setDate(currentDate.start)
+                
             default:
                 break
             }
-            cell.delegate = self
-            
-            
-            
             return cell
+            
+        //Описание, если свернут/нет выбор даты
+        case (2, 0):
+            let cell = tableView.dequeueReusableCell(withIdentifier: CellID.description.rawValue, for: indexPath) as! DescriptionCell
+            infoCells[.description, default: nil] = cell
+            return cell
+        
+
 
         default:
             return UITableViewCell()
@@ -126,12 +128,14 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
     //MARK: - Service
     //
     
+    //Обновляем ячйку с датой, при поступлении информации с пикера
     private func setDateFromPickerCell(_ dateComponents: DateComponents){
+        let calendar = Calendar.current
         guard let dateCell = infoCells[.dateInterval] as? DateCell else { return }
         
         let currentInterval = dateCell.getInfo()
-        var startComps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: currentInterval.start)
-        var endComps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: currentInterval.end)
+        var startComps = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: currentInterval.start)
+        var endComps = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: currentInterval.end)
         
         switch currentDatePickerType {
             
@@ -142,15 +146,20 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
             endComps.year = dateComponents.year
             endComps.month = dateComponents.month
             endComps.day = dateComponents.day
+            
         case .startTime:
             startComps.hour = dateComponents.hour
             startComps.minute = dateComponents.minute
-            let endDate = Calendar.current.dateComponents([.hour, .minute], from: currentInterval.end)
-            if let newDate = Calendar.current.date(from: dateComponents), let newEndDate = Calendar.current.date(from: endDate){
-                if newDate > newEndDate{
-                    endComps.hour = dateComponents.hour
+            
+            //если новая дата больше, чем конечная, то выраваниваем
+            let currentEndDateComps = calendar.dateComponents([.hour, .minute], from: currentInterval.end)
+            if let currentEndDate = calendar.date(from: currentEndDateComps), let newEndDate = calendar.date(from: dateComponents){
+                
+                if newEndDate > currentEndDate{
+                    endComps.hour = (dateComponents.hour ?? 0) + 1
                     endComps.minute = dateComponents.minute
                 }
+                
             }
 
         case .endTime:
@@ -160,8 +169,8 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
             return
         }
         
-        guard let newStartDate = Calendar.current.date(from: startComps) else { return }
-        guard let newEndDate = Calendar.current.date(from: endComps) else { return }
+        guard let newStartDate = calendar.date(from: startComps) else { return }
+        guard let newEndDate = calendar.date(from: endComps) else { return }
         
         let newInterval = DateInterval(start: newStartDate, end: newEndDate)
         dateCell.setInfo(newInterval)
@@ -249,7 +258,6 @@ enum CellID: String{
     case datePicker = "datePicker"
     case timePicker = "timePicker"
     case description = "description"
-    case applyButotn = "applyButton"
 }
 
 //тип информации ячейки

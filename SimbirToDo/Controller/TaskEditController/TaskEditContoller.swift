@@ -13,7 +13,9 @@ class TaskEditContoller: UIViewController{
     private var taskEditerTable: TaskEditerProtocol!
     
     
+    //
     //MARK: - Lifecycle
+    //
     convenience init(taskProcessBehavior: TaskProcessBehavior, deletionBehavior: DeletionBehavior? = nil){
         self.init(nibName: nil, bundle: nil)
         self.taskProcessBehavior = taskProcessBehavior
@@ -30,14 +32,18 @@ class TaskEditContoller: UIViewController{
         self.view.backgroundColor = .primaryContollerBackground
     }
     
+    //
     //MARK: - UI
+    //
     func setupUI() {
         setupApplyButton()
         setupDeleteBarItem()
         setupFormTableView()
     }
     
+    //
     //MARK: - Apply BarButton
+    //
     private func setupApplyButton(){
         let image = UIImage(named: "checkmark")
         applyBarItem = UIBarButtonItem(image: image, style: .done, target: self, action: #selector(applyBarItemPressed))
@@ -46,10 +52,13 @@ class TaskEditContoller: UIViewController{
     }
     
     @objc private func applyBarItemPressed(){
-        deletionBehavior?.delete()
+        guard let taskInfo = taskEditerTable.getInfo() else { return }
+        taskProcessBehavior?.process(with: taskInfo)
     }
     
+    //
     //MARK: Delete BarButton
+    //
     private func setupDeleteBarItem(){
         let image = UIImage(named: "trash")
         deleteBarItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(deleteBarItemPressed))
@@ -62,7 +71,9 @@ class TaskEditContoller: UIViewController{
         
     }
     
+    //
     //MARK: - Form TableView
+    //
     private func setupFormTableView(){
         
         let style: UITableView.Style
@@ -90,7 +101,9 @@ class TaskEditContoller: UIViewController{
         taskEditerTable.initialInfo = TaskInfo(task: taskProcessBehavior?.task)
     }
     
+    //
     //MARK: - Other
+    //
     private func deletionBehaviorChanged(){
         if deletionBehavior == nil{
             self.navigationItem.rightBarButtonItems?.removeAll(where: { $0 == deleteBarItem })
