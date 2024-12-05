@@ -4,6 +4,7 @@ import UIKit
 class DatePickerCell: TaskEditCell, DateComponentsPickerProtocol{
     
     var delegate: (any DateComponentsPickerDelegate)?
+    var minimumDate: Date = Date(timeIntervalSince1970: 0)
     private var datePicker: UIDatePicker!
     
     //
@@ -35,5 +36,9 @@ class DatePickerCell: TaskEditCell, DateComponentsPickerProtocol{
     @objc func dateChanged(_ datePicker: UIDatePicker){
         let comps = Calendar.current.dateComponents([.year, .month, .day], from: datePicker.date)
         delegate?.dateComponentsPicker(self, didSelect: comps)
+    }
+    
+    func setDate(_ date: Date) {
+        self.datePicker.date = date
     }
 }

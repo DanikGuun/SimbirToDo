@@ -1,17 +1,20 @@
 import UIKit
 import RealmSwift
 
-class TaskEditTableView: UITableView, UITableViewDataSource{
+class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
 
     //Cells
     private var infoCells: Dictionary<InfoType, (any TaskEditCellProtocol)?> = [:]
     private var isPickerExpanded: Bool = false
     private var currentDatePickerType: DatePickerType? = nil //текущий тип выбора даты, к нему подвязан выбор id ячейки с выбором
     
-    let realm = try! Realm()
-    var task: ToDoTask{
-        let objects = realm.objects(ToDoTask.self)
-        return objects.first!
+    //Service
+    var initialInfo: TaskInfo? //для задания начальных значений для ячеек
+    var isInitialLayout = true //для того, чтобы задать значения ячейкам при первом ините
+    var taskDelegate: (any TaskEditerDelegate)?
+    var currentDate: DateInterval? { //минимальное время для пикера. Чтобы конец не был раньше начала
+        guard let dateCell = infoCells[.dateInterval] as? DateCell else { return nil }
+        return dateCell.getInfo()
     }
     
     //
@@ -19,6 +22,14 @@ class TaskEditTableView: UITableView, UITableViewDataSource{
     //
     convenience init(){
         self.init(frame: .zero, style: .grouped)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if isInitialLayout, let initialInfo{
+            self.setInfo(initialInfo)
+            isInitialLayout = false
+        }
     }
     
     override init(frame: CGRect, style: UITableView.Style) {
@@ -39,6 +50,8 @@ class TaskEditTableView: UITableView, UITableViewDataSource{
         self.register(TimePickerCell.self, forCellReuseIdentifier: CellID.timePicker.rawValue)
         self.register(DatePickerCell.self, forCellReuseIdentifier: CellID.datePicker.rawValue)
         self.register(ApplyCell.self, forCellReuseIdentifier: CellID.applyButotn.rawValue)
+        self.keyboardDismissMode = .onDrag
+        self.estimatedRowHeight = 40
     }
     
     //
@@ -64,32 +77,42 @@ class TaskEditTableView: UITableView, UITableViewDataSource{
         //Имя
         case (0, 0):
             let cell = tableView.dequeueReusableCell(withIdentifier: CellID.name.rawValue, for: indexPath) as! NameCell
-            cell.setInfo(task.title)
-            infoCells[.name, default: nil] = cell as? any TaskEditCellProtocol
+            infoCells[.name, default: nil] = cell
             return cell
             
         //Дата
         case (0, 1):
             let cell = tableView.dequeueReusableCell(withIdentifier: CellID.date.rawValue, for: indexPath) as! DateCell
+            infoCells[.dateInterval, default: nil] = cell
             cell.delegate = self
-            infoCells[.dateInterval, default: nil] = cell as any TaskEditCellProtocol
-            cell.setInfo(DateInterval(start: Date(timeIntervalSince1970: task.dateStart), end: Date(timeIntervalSince1970: task.dateEnd)))
             return cell
         
         //Описание, если свернут/нет выбор даты
         case (0, 2) where isPickerExpanded == false, (0, 3) where isPickerExpanded == true:
-            let cell = tableView.dequeueReusableCell(withIdentifier: CellID.description.rawValue, for: indexPath)
-            infoCells[.description, default: nil] = cell as? any TaskEditCellProtocol
+            let cell = tableView.dequeueReusableCell(withIdentifier: CellID.description.rawValue, for: indexPath) as! DescriptionCell
+            infoCells[.description, default: nil] = cell
             return cell
         
         //Выбор даты
         case (0, 2) where isPickerExpanded == true:
             guard let id = currentDatePickerType?.cellIdForCurrentType else { fallthrough }
+            guard let currentDate = currentDate else { fallthrough }
             
             guard let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath) as? any DateComponentsPickerProtocol
             else { fallthrough }
             
+            switch currentDatePickerType {
+            case .endTime:
+                cell.minimumDate = currentDate.start
+                cell.setDate(currentDate.end)
+            case .startTime, .date:
+                cell.setDate(currentDate.start)
+            default:
+                break
+            }
             cell.delegate = self
+            
+            
             
             return cell
             
@@ -127,6 +150,14 @@ class TaskEditTableView: UITableView, UITableViewDataSource{
         case .startTime:
             startComps.hour = dateComponents.hour
             startComps.minute = dateComponents.minute
+            let endDate = Calendar.current.dateComponents([.hour, .minute], from: currentInterval.end)
+            if let newDate = Calendar.current.date(from: dateComponents), let newEndDate = Calendar.current.date(from: endDate){
+                if newDate > newEndDate{
+                    endComps.hour = dateComponents.hour
+                    endComps.minute = dateComponents.minute
+                }
+            }
+
         case .endTime:
             endComps.hour = dateComponents.hour
             endComps.minute = dateComponents.minute
@@ -139,6 +170,37 @@ class TaskEditTableView: UITableView, UITableViewDataSource{
         
         let newInterval = DateInterval(start: newStartDate, end: newEndDate)
         dateCell.setInfo(newInterval)
+        
+    }
+    
+    //
+    //MARK: - Task Editer Protocol
+    //
+    
+    func setInfo(_ info: TaskInfo) {
+        
+        let nameCell = infoCells[.name] as? NameCell
+        let description = infoCells[.description] as? DescriptionCell
+        let dateInterval = infoCells[.dateInterval] as? DateCell
+        
+        nameCell?.setInfo(info.name)
+        description?.setInfo(info.taskDescription)
+        dateInterval?.setInfo(info.dateInterval)
+        
+    }
+    
+    func getInfo() -> TaskInfo? {
+        
+        guard let nameCell = infoCells[.name] as? NameCell,
+        let descriptionCell = infoCells[.description] as? DescriptionCell,
+        let dateIntervalCell = infoCells[.dateInterval] as? DateCell
+        else { return nil }
+        
+        let name = nameCell.getInfo()
+        let description = descriptionCell.getInfo()
+        let dateInterval = dateIntervalCell.getInfo()
+        
+        return TaskInfo(name: name, description: description, dateInterval: dateInterval)
         
     }
 }

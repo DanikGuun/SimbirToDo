@@ -9,7 +9,8 @@ class TaskEditContoller: UIViewController{
     
     //UI
     private var deleteBarItem: UIBarButtonItem!
-    private var formTableView: TaskEditTableView!
+    private var taskEditerTable: TaskEditerProtocol!
+    
     
     //MARK: - Lifecycle
     convenience init(taskProcessBehavior: TaskProcessBehavior, deletionBehavior: DeletionBehavior? = nil){
@@ -58,10 +59,10 @@ class TaskEditContoller: UIViewController{
             style = .grouped
         }
         
-        formTableView = TaskEditTableView(frame: .zero, style: style)
-        self.view.addSubview(formTableView)
+        taskEditerTable = TaskEditTableView(frame: .zero, style: style)
+        self.view.addSubview(taskEditerTable)
         
-        formTableView.snp.makeConstraints {[weak self] maker in
+        taskEditerTable.snp.makeConstraints {[weak self] maker in
             guard let self = self else { return }
             maker.leading.top.trailing.equalToSuperview()
             
@@ -73,13 +74,24 @@ class TaskEditContoller: UIViewController{
             }
         }
         
-        
-        formTableView.keyboardDismissMode = .onDrag
-        formTableView.estimatedRowHeight = 40
+        taskEditerTable.initialInfo = TaskInfo(task: taskProcessBehavior?.task)
     }
     
     //MARK: - Other
     private func deletionBehaviorChanged(){
         self.navigationItem.rightBarButtonItem = deletionBehavior != nil ? deleteBarItem : nil
     }
+}
+
+//
+//MARK: - Task Editer Delegate
+//
+extension TaskEditContoller: TaskEditerDelegate {
+    
+    func taskEditer(_ taskEditer: any TaskEditerProtocol, didFinishEditingWith info: TaskInfo) {
+        
+        taskProcessBehavior?.process(with: info)
+        
+    }
+    
 }

@@ -2,9 +2,10 @@
 import UIKit
 import SnapKit
 
-class DescriptionCell: TaskEditCell{
+class DescriptionCell: TaskEditCell, TaskEditCellProtocol{
     typealias InfoType = String
     
+    //UI
     var textView: PlaceholderTextView!
     
     override func setupUI() {

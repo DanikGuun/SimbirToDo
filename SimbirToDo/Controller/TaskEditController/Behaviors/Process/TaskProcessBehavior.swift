@@ -1,5 +1,5 @@
 
 protocol TaskProcessBehavior {
     var task: ToDoTask { get set }
-    func process()
+    func process(with info: TaskInfo)
 }

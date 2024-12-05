@@ -1,6 +1,7 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
 
 class TasksListController: UIViewController {
 
@@ -52,7 +53,8 @@ class TasksListController: UIViewController {
     }
     
     @objc private func addTaskButtonPreessed(){
-        guard let vc = TaskEditControllerFabric.create(task: ToDoTask(), type: .edit) else { return }
+        let task = try! Realm().objects(ToDoTask.self).first!
+        guard let vc = TaskEditControllerFabric.create(task: task, type: .edit) else { return }
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

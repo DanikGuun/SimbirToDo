@@ -3,6 +3,7 @@ import UIKit
 import SnapKit
 
 class DateCell: TaskEditCell, TaskEditCellProtocol {
+    
     typealias InfoType = DateInterval
     
     //UI
@@ -14,7 +15,7 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     var delegate: DateCellDelegate?
     private var lastPickerType: DatePickerType?
     private var buttons: [UIButton] = [] //все кнопки, надо для выключения, если выбирается другая кнопка
-    private var currentInterval: DateInterval = DateInterval()
+    private var currentInterval: InfoType = DateInterval()
     
     //
     //MARK: - UI
@@ -24,6 +25,8 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         setupDayButton()
         setupEndTimeButton()
         setupStartTimeButton()
+        
+        setInfo(DateInterval(start: Date(), duration: 3600))
     }
     
     //
@@ -40,7 +43,6 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         }
         
         dayButton.apply(.gray(selectedColor: .blueAction))
-        dayButton.setTitle("01.01.1970", for: .normal)
         dayButton.addTarget(self, action: #selector(dayButtonPressed), for: .touchUpInside)
         dayButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         

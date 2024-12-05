@@ -2,9 +2,10 @@
 import UIKit
 import SnapKit
 
-class NameCell: TaskEditCell{
+class NameCell: TaskEditCell, TaskEditCellProtocol{
     typealias InfoType = String
     
+    //UI
     private var nameField: UITextField!
     
     //MARK: - UI

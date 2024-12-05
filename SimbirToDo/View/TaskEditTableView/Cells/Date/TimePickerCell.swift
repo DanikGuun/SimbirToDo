@@ -4,7 +4,9 @@ import UIKit
 class TimePickerCell: TaskEditCell, DateComponentsPickerProtocol{
     
     var delegate: (any DateComponentsPickerDelegate)?
-    private var timePicker: UIDatePicker!
+    var minimumDate: Date = Date(timeIntervalSince1970: 0) { didSet { timePicker.minimumDate = minimumDate } }
+    private var timePicker = UIDatePicker()
+    
     
     //
     //MARK: - UI
@@ -18,7 +20,6 @@ class TimePickerCell: TaskEditCell, DateComponentsPickerProtocol{
     //MARK: Time Picker
     //
     private func setupTimePicker() {
-        timePicker = UIDatePicker()
         self.contentView.addSubview(timePicker)
         
         timePicker.snp.makeConstraints { maker in
@@ -30,12 +31,17 @@ class TimePickerCell: TaskEditCell, DateComponentsPickerProtocol{
         if #available(iOS 14.0, *){
             timePicker.preferredDatePickerStyle = .wheels
         }
+        timePicker.minimumDate = minimumDate
         timePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
     }
     
     @objc func dateChanged(_ datePicker: UIDatePicker){
         let comps = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
         delegate?.dateComponentsPicker(self, didSelect: comps)
+    }
+    
+    func setDate(_ date: Date) {
+        self.timePicker.date = date
     }
     
 }
