@@ -53,8 +53,7 @@ class TasksListController: UIViewController {
     }
     
     @objc private func addTaskButtonPreessed(){
-        let task = try! Realm().objects(ToDoTask.self).first!
-        guard let vc = TaskEditControllerFabric.create(task: task, type: .edit) else { return }
+        guard let vc = TaskEditControllerFabric.create(type: .add) else { return }
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

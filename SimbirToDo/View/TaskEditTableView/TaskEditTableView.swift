@@ -44,14 +44,15 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
     private func setup(){
         self.dataSource = self
         self.allowsSelection = false
+        self.keyboardDismissMode = .onDrag
+        self.estimatedRowHeight = 40
+        self.delaysContentTouches = false
+        
         self.register(NameCell.self, forCellReuseIdentifier: CellID.name.rawValue)
         self.register(DateCell.self, forCellReuseIdentifier: CellID.date.rawValue)
         self.register(DescriptionCell.self, forCellReuseIdentifier: CellID.description.rawValue)
         self.register(TimePickerCell.self, forCellReuseIdentifier: CellID.timePicker.rawValue)
         self.register(DatePickerCell.self, forCellReuseIdentifier: CellID.datePicker.rawValue)
-        self.register(ApplyCell.self, forCellReuseIdentifier: CellID.applyButotn.rawValue)
-        self.keyboardDismissMode = .onDrag
-        self.estimatedRowHeight = 40
     }
     
     //
@@ -59,13 +60,12 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
     //
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section{
         case 0: return isPickerExpanded ? 4 : 3
-        case 1: return 1
         default: return 0
         }
     }
@@ -115,12 +115,7 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
             
             
             return cell
-            
-        //кнопка
-        case (1, 0):
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: CellID.applyButotn.rawValue, for: indexPath) as? ApplyCell
-            else { fallthrough }
-            return cell
+
         default:
             return UITableViewCell()
             

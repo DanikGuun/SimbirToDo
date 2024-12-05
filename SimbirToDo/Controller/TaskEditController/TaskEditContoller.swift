@@ -9,6 +9,7 @@ class TaskEditContoller: UIViewController{
     
     //UI
     private var deleteBarItem: UIBarButtonItem!
+    private var applyBarItem: UIBarButtonItem!
     private var taskEditerTable: TaskEditerProtocol!
     
     
@@ -31,17 +32,29 @@ class TaskEditContoller: UIViewController{
     
     //MARK: - UI
     func setupUI() {
+        setupApplyButton()
         setupDeleteBarItem()
         setupFormTableView()
     }
     
-    //MARK: Delete Bar Button
+    //MARK: - Apply BarButton
+    private func setupApplyButton(){
+        let image = UIImage(named: "checkmark")
+        applyBarItem = UIBarButtonItem(image: image, style: .done, target: self, action: #selector(applyBarItemPressed))
+        
+        self.navigationItem.rightBarButtonItems = [applyBarItem]
+    }
+    
+    @objc private func applyBarItemPressed(){
+        deletionBehavior?.delete()
+    }
+    
+    //MARK: Delete BarButton
     private func setupDeleteBarItem(){
         let image = UIImage(named: "trash")
         deleteBarItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(deleteBarItemPressed))
         
         deleteBarItem.tintColor = .red
-        self.navigationItem.rightBarButtonItem = deleteBarItem
         deletionBehaviorChanged()
     }
     
@@ -79,7 +92,12 @@ class TaskEditContoller: UIViewController{
     
     //MARK: - Other
     private func deletionBehaviorChanged(){
-        self.navigationItem.rightBarButtonItem = deletionBehavior != nil ? deleteBarItem : nil
+        if deletionBehavior == nil{
+            self.navigationItem.rightBarButtonItems?.removeAll(where: { $0 == deleteBarItem })
+        }
+        else{
+            self.navigationItem.rightBarButtonItems?.append(deleteBarItem)
+        }
     }
 }
 
