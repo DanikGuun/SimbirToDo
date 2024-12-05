@@ -10,8 +10,9 @@ class PlaceholderTextView: UITextView {
     var placeholderColor: UIColor? = .gray3{ didSet { placeholderLabel.textColor = placeholderColor } }
     var placeholder: String? { didSet { placeholderLabel.text = placeholder } }
     
-    
+    //
     //MARK: - Lifecycle
+    //
     convenience init(){
         self.init(frame: .zero)
     }
@@ -20,6 +21,7 @@ class PlaceholderTextView: UITextView {
         super.init(frame: .zero, textContainer: nil)
         setupPlaceholderLabel()
         NotificationCenter.default.addObserver(self, selector: #selector(updateText), name: UITextView.textDidChangeNotification, object: self)
+        self.font = placeholderLabel.font
         
     }
     
@@ -28,25 +30,28 @@ class PlaceholderTextView: UITextView {
         
     }
     
+    //
     //MARK: - UI
+    //
     private func setupPlaceholderLabel(){
         self.addSubview(placeholderLabel)
         placeholderLabel.font = self.font
         placeholderLabel.textColor = placeholderColor
         
         placeholderLabel.snp.makeConstraints { maker in
-            maker.leading.top.equalToSuperview().inset(3)
+            maker.leading.equalToSuperview().inset(4)
+            maker.top.equalToSuperview().inset(8)
         }
         
     }
     
+    //
     //MARK: - Other
+    //
     
     @objc private func updateText(){
         placeholderLabel.isHidden = !(text?.isEmpty ?? true)
     }
-
-
 
     deinit {
         NotificationCenter.default.removeObserver(self, name: UITextView.textDidChangeNotification, object: self)
