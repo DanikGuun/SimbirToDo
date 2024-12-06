@@ -27,6 +27,7 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         setupStartTimeButton()
         
         setInfo(DateInterval(start: Date(), duration: 3600))
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     
     //
@@ -49,7 +50,7 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     }
     
     @objc func dayButtonPressed(button: UIButton) {
-        dateSelected(from: button, dateType: .date)
+        datePickerSelected(from: button, dateType: .date)
     }
     
     //
@@ -73,7 +74,7 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     }
     
     @objc func endTimeButtonPressed(button: UIButton) {
-        dateSelected(from: button, dateType: .endTime)
+        datePickerSelected(from: button, dateType: .endTime)
     }
     
     //
@@ -97,13 +98,13 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     }
     
     @objc func startTimeButtonPressed(button: UIButton) {
-        dateSelected(from: button, dateType: .startTime)
+        datePickerSelected(from: button, dateType: .startTime)
     }
     
     //
     //MARK: - Service
     //
-    private func dateSelected(from button: UIButton, dateType: DatePickerType){
+    private func datePickerSelected(from button: UIButton, dateType: DatePickerType){
         button.isSelected.toggle()
         if button.isSelected {
             buttons.forEach { $0.isSelected = $0 == button } //выключаем остальные
@@ -115,6 +116,19 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
             lastPickerType = nil
             delegate?.dateCell(hidePickerOfType: dateType)
         }
+    }
+    
+    @objc private func keyboardWillShow(){
+        buttons.forEach { $0.isSelected = false }
+    
+        if let lastPickerType{
+            delegate?.dateCell(hidePickerOfType: lastPickerType)
+            self.lastPickerType = nil
+        }
+    }
+    
+    deinit{
+        NotificationCenter.default.removeObserver(self)
     }
     
     //
@@ -140,5 +154,5 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     func getInfo() -> DateInterval {
         return currentInterval
     }
-    
+
 }

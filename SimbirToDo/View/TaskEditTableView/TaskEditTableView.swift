@@ -222,6 +222,7 @@ extension TaskEditTableView: DateCellDelegate{
         self.insertRows(at: [IndexPath(row: 1, section: 1)], with: .fade)
         self.endUpdates()
         
+        self.endEditing(true)
     }
     
     func dateCell(hidePickerOfType type: DatePickerType) {
