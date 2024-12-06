@@ -13,6 +13,7 @@ extension UIButton {
             self.layer.cornerRadius = 5
         }
     }
+    
 }
 
 enum ButtonStyleType {

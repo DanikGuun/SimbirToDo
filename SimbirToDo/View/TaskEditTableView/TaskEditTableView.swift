@@ -103,6 +103,7 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
                 cell.setDate(currentDate.end)
                 
             case .startTime, .date:
+                cell.minimumDate = Date(timeIntervalSince1970: 0)
                 cell.setDate(currentDate.start)
                 
             default:
@@ -156,8 +157,15 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
             if let currentEndDate = calendar.date(from: currentEndDateComps), let newEndDate = calendar.date(from: dateComponents){
                 
                 if newEndDate > currentEndDate{
-                    endComps.hour = (dateComponents.hour ?? 0) + 1
-                    endComps.minute = dateComponents.minute
+                    //чтобы не было даты например 23:06 - 00:06
+                    if dateComponents.hour ?? 0 >= 23, dateComponents.minute ?? 0 > 0 {
+                        endComps.hour? = 23
+                        endComps.minute? = 59
+                    }
+                    else{
+                        endComps.hour = dateComponents.hour
+                        endComps.minute = dateComponents.minute
+                    }
                 }
                 
             }
