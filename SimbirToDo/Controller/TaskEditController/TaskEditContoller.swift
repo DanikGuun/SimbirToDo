@@ -1,15 +1,16 @@
 
 import UIKit
 
-class TaskEditContoller: UIViewController{
+class TaskEditContoller: UIViewController {
     
     //Behaviors
     var taskProcessBehavior: TaskProcessBehavior?
     var deletionBehavior: DeletionBehavior? { didSet { deletionBehaviorChanged() } }
     
     //UI
-    private var deleteBarItem: UIBarButtonItem!
     private var applyBarItem: UIBarButtonItem!
+    private var deleteBarItem: UIBarButtonItem!
+    private var backButton: UIButton!
     private var taskEditerTable: TaskEditerProtocol!
     
     
@@ -30,6 +31,7 @@ class TaskEditContoller: UIViewController{
     
     func setup() {
         self.view.backgroundColor = .primaryContollerBackground
+        self.navigationItem.largeTitleDisplayMode = .never
     }
     
     //
@@ -38,9 +40,9 @@ class TaskEditContoller: UIViewController{
     func setupUI() {
         setupApplyButton()
         setupDeleteBarItem()
+        setupBackButton()
         setupFormTableView()
     }
-    
     //
     //MARK: - Apply BarButton
     //
@@ -54,6 +56,7 @@ class TaskEditContoller: UIViewController{
     @objc private func applyBarItemPressed(){
         guard let taskInfo = taskEditerTable.getInfo() else { return }
         taskProcessBehavior?.process(with: taskInfo)
+        self.navigationController?.popViewController(animated: true)
     }
     
     //
@@ -68,7 +71,38 @@ class TaskEditContoller: UIViewController{
     }
     
     @objc func deleteBarItemPressed(){
-        deletionBehavior?.delete()
+        
+        let accept: (() -> Void) = { [weak self] in
+            self?.deletionBehavior?.delete()
+        }
+        
+        self.confirmAlert(title: "Вы уверены, что хотите удалить задачу?", accept: accept)
+    }
+    
+    //
+    //MARK: - Back Button
+    //
+    private func setupBackButton(){
+        
+        backButton = TintedButton()
+        backButton.setTitle("Назад", for: .normal)
+        backButton.setTitleColor(.systemBlue, for: .normal)
+        backButton.setImage(UIImage(named: "chevronLeft"), for: .normal)
+        backButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
+        backButton.adjustsImageWhenHighlighted = false
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        
+    }
+    
+    @objc private func backButtonPressed(_ button: UIButton){
+
+        let accept: (() -> Void) = { [weak self] in
+            self?.navigationController?.popViewController(animated: true)
+            button.setTitleColor(.systemBlue, for: .normal)
+        }
+        
+        self.confirmAlert(title: "Вы уверены, что хотите Выйти?", message: "Изменения не сохранятся", accept: accept)
     }
     
     //
@@ -100,7 +134,7 @@ class TaskEditContoller: UIViewController{
         
         taskEditerTable.initialInfo = TaskInfo(task: taskProcessBehavior?.task)
     }
-    
+
     //
     //MARK: - Other
     //
@@ -112,4 +146,5 @@ class TaskEditContoller: UIViewController{
             self.navigationItem.rightBarButtonItems?.append(deleteBarItem)
         }
     }
+    
 }
