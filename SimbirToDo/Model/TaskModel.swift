@@ -2,6 +2,7 @@
 import RealmSwift
 
 class ToDoTask: Object {
+    let id = UUID()
     @Persisted dynamic var title: String
     @Persisted dynamic var taskDescription: String
     @Persisted dynamic var dateStart: Double //TimeStamp

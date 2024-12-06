@@ -68,7 +68,7 @@ class TaskEditContoller: UIViewController{
     }
     
     @objc func deleteBarItemPressed(){
-        
+        deletionBehavior?.delete()
     }
     
     //

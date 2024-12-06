@@ -7,12 +7,12 @@ class TaskEditControllerFabric{
         
         switch type {
         case .add:
-            processBehavior = AddingTask()
+            processBehavior = AddTask()
             deleteBehavior = nil
         case .edit:
             guard let task else { return nil }
-            processBehavior = EditingTask(task: task)
-            deleteBehavior = TaskDeletion(task: task)
+            processBehavior = EditTask(task: task)
+            deleteBehavior = DeleteTask(task: task)
         }
         
         return TaskEditContoller(taskProcessBehavior: processBehavior, deletionBehavior: deleteBehavior)

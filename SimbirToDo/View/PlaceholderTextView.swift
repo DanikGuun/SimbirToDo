@@ -7,6 +7,7 @@ class PlaceholderTextView: UITextView {
     private var placeholderLabel = UILabel()
     
     override var font: UIFont? { didSet { placeholderLabel.font = font } }
+    override var text: String? { didSet { updateText() } }
     var placeholderColor: UIColor? = .gray3{ didSet { placeholderLabel.textColor = placeholderColor } }
     var placeholder: String? { didSet { placeholderLabel.text = placeholder } }
     
