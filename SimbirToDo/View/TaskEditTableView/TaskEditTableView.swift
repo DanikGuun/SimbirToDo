@@ -117,8 +117,6 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
             infoCells[.description, default: nil] = cell
             return cell
         
-
-
         default:
             return UITableViewCell()
             
@@ -212,7 +210,7 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
         let description = descriptionCell.getInfo()
         let dateInterval = dateIntervalCell.getInfo()
         
-        return TaskInfo(name: name, description: description, dateInterval: dateInterval)
+        return TaskInfo(name: name, taskDescription: description, dateInterval: dateInterval)
         
     }
 }

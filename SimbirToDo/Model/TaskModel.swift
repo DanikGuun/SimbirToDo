@@ -23,30 +23,38 @@ enum TaskProcessType{
 
 ///ToDoTask для проброски во вьюшки, чтобы не привязывать их к модели
 struct TaskInfo{
+    let id: UUID?
     let name: String
     let taskDescription: String
     let dateInterval: DateInterval
     
-    init (name: String, description: String, dateInterval: DateInterval){
+    init(id: UUID?, name: String, taskDescription: String, dateInterval: DateInterval){
+        self.id = id
         self.name = name
-        self.taskDescription = description
+        self.taskDescription = taskDescription
         self.dateInterval = dateInterval
+    }
+    
+    init (name: String, taskDescription: String, dateInterval: DateInterval){
+        self.init(id: nil, name: name, taskDescription: taskDescription, dateInterval: dateInterval)
     }
     
     init (task: ToDoTask?){
         var name = ""
-        var description = ""
+        var taskDescription = ""
         var dateInterval = DateInterval(start: Date(), duration: 3600)
+        var id: UUID? = nil
         
         if let task{
             name = task.title
-            description = task.taskDescription
+            taskDescription = task.taskDescription
+            id = task.id
             
             let startDate = Date(timeIntervalSince1970: task.dateStart)
             let endDate = Date(timeIntervalSince1970: task.dateEnd)
             dateInterval = DateInterval(start: startDate, end: endDate)
         }
         
-        self.init(name: name, description: description, dateInterval: dateInterval)
+        self.init(id: id, name: name, taskDescription: taskDescription, dateInterval: dateInterval)
     }
 }
