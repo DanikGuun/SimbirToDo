@@ -1,7 +1,9 @@
 
 import UIKit
 
-class DailyTaskView: UIView {
+class DailyTaskView: UIView, TasksPresenterProtocol {
+    
+    var delegate: (any TasksPresenterDelegate)?
     
     //UI
     private var mainStackView: TimeLineStackView!
@@ -50,9 +52,9 @@ class DailyTaskView: UIView {
     private func setupUI(){
         setupSupplementaryViews()
     }
-    //
+    
+    
     //MARK: SupplementaryView
-    //
     private func setupSupplementaryViews(){
         mainStackView = TimeLineStackView()
         self.addSubview(mainStackView)
@@ -69,4 +71,25 @@ class DailyTaskView: UIView {
         })
         
     }
+    
+    //
+    //MARK: - Tasks Presenter Protocol
+    //
+    
+    func addTask(taskInfo: TaskInfo) {
+        
+    }
+    
+    func reloadData() {
+        
+    }
+    
+    func updateTask(taskInfo: TaskInfo) {
+        
+    }
+    
+    func removeTask(taskInfo: TaskInfo) {
+        
+    }
+    
 }

@@ -3,8 +3,13 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-class TasksListController: UIViewController {
+class TasksListController: UIViewController, TasksPresenterDelegate {
 
+    
+    //UI
+    private var mainScroll: UIScrollView!
+    private var taskPresenterView: TasksPresenterProtocol!
+    
     //
     //MARK: - Lifecycle
     //
@@ -31,11 +36,10 @@ class TasksListController: UIViewController {
     private func setupUI(){
         setupRightBarButton()
         setupMainScroll()
+        setupTaskPresenter()
     }
     
-    //
-    //MARK: - Right Bar Button (Добавить)
-    //
+    //MARK: Right Bar Button (Добавить)
     private func setupRightBarButton(){
         let button = Button()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
@@ -61,11 +65,10 @@ class TasksListController: UIViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    //
-    //MARK: - Tasks
-    //
+    
+    //MARK: MainScroll
     private func setupMainScroll(){
-        let mainScroll = UIScrollView()
+        mainScroll = UIScrollView()
         self.view.addSubview(mainScroll)
         
         mainScroll.snp.makeConstraints { maker in
@@ -73,13 +76,25 @@ class TasksListController: UIViewController {
             maker.bottom.equalToSuperview()
         }
         
-        let v = DailyTaskView()
-        mainScroll.addSubview(v)
-        v.snp.makeConstraints { maker in
+    }
+    
+    //MARK: Task Presenter
+    private func setupTaskPresenter(){
+        taskPresenterView = DailyTaskView()
+        taskPresenterView.delegate = self
+        mainScroll.addSubview(taskPresenterView)
+        
+        taskPresenterView.snp.makeConstraints { maker in
             maker.edges.equalToSuperview()
             maker.width.equalToSuperview()
             maker.height.equalTo(1500)
         }
+        
     }
+    
+    func tasksPresenter(requestToEditTaskWith id: UUID) {
+        
+    }
+    
 }
 
