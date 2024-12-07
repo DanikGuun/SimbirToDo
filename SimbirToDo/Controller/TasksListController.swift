@@ -21,6 +21,7 @@ class TasksListController: UIViewController {
     private func setup(){
         self.view.backgroundColor = .primaryContollerBackground
         self.navigationItem.title = "Задачи"
+
     }
     
     
@@ -29,6 +30,7 @@ class TasksListController: UIViewController {
     //
     private func setupUI(){
         setupRightBarButton()
+        setupMainScroll()
     }
     
     //
@@ -59,5 +61,25 @@ class TasksListController: UIViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
+    //
+    //MARK: - Tasks
+    //
+    private func setupMainScroll(){
+        let mainScroll = UIScrollView()
+        self.view.addSubview(mainScroll)
+        
+        mainScroll.snp.makeConstraints { maker in
+            maker.leading.trailing.top.equalTo(self.view.safeAreaLayoutGuide)
+            maker.bottom.equalToSuperview()
+        }
+        
+        let v = DailyTaskView()
+        mainScroll.addSubview(v)
+        v.snp.makeConstraints { maker in
+            maker.edges.equalToSuperview()
+            maker.width.equalToSuperview()
+            maker.height.equalTo(1500)
+        }
+    }
 }
 
