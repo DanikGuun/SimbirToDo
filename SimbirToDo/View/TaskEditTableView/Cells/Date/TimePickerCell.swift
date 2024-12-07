@@ -32,6 +32,7 @@ class TimePickerCell: TaskEditCell, DateComponentsPickerProtocol{
             timePicker.preferredDatePickerStyle = .wheels
         }
         timePicker.minimumDate = minimumDate
+        timePicker.minuteInterval = 5
         timePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
     }
     

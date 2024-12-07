@@ -23,6 +23,7 @@ class TasksListController: UIViewController {
         self.navigationItem.title = "Задачи"
     }
     
+    
     //
     //MARK: - UI
     //
@@ -34,12 +35,12 @@ class TasksListController: UIViewController {
     //MARK: - Right Bar Button (Добавить)
     //
     private func setupRightBarButton(){
-        let button = TintedButton()
+        let button = Button()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
         
-        button.tintColor = .blueAction
+        button.tintColor = .systemBlue
         button.backgroundColor = .blueActionSecondary
-        button.setTitleColor(.blueAction, for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
         
         button.setTitle("Добавить", for: .normal)
         button.contentEdgeInsets = UIEdgeInsets(top: 7, left: 15, bottom: 7, right: 15)

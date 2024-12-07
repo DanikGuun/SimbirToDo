@@ -84,7 +84,7 @@ class TaskEditContoller: UIViewController {
     //
     private func setupBackButton(){
         
-        backButton = TintedButton()
+        backButton = Button()
         backButton.setTitle("Назад", for: .normal)
         backButton.setTitleColor(.systemBlue, for: .normal)
         backButton.setImage(UIImage(named: "chevronLeft"), for: .normal)

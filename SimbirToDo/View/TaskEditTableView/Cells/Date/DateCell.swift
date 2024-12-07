@@ -7,9 +7,9 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     typealias InfoType = DateInterval
     
     //UI
-    private var dayButton: UIButton!
-    private var startTimeButton: UIButton!
-    private var endTimeButton: UIButton!
+    private var dayButton: Button!
+    private var startTimeButton: Button!
+    private var endTimeButton: Button!
     
     //Service
     var delegate: DateCellDelegate?
@@ -34,7 +34,7 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     //MARK: Day Button
     //
     private func setupDayButton() {
-        dayButton = UIButton()
+        dayButton = Button()
         self.contentView.addSubview(dayButton)
         
         dayButton.snp.makeConstraints { maker in
@@ -42,14 +42,18 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
             maker.height.equalTo(UIScreen.main.bounds.height/28)
         }
         
-        dayButton.apply(.gray(selectedColor: .blueAction))
-        dayButton.addTarget(self, action: #selector(dayButtonPressed), for: .touchUpInside)
+        dayButton.apply(.gray(selectedColor: .systemBlue))
+        dayButton.isSelectionPrimaryAction = true
         dayButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        
+        dayButton.action = { [weak self] button in
+            self?.dayButtonPressed(button: button)
+        }
         
         buttons.append(dayButton)
     }
     
-    @objc func dayButtonPressed(button: UIButton) {
+    func dayButtonPressed(button: UIButton) {
         datePickerSelected(from: button, dateType: .date)
     }
     
@@ -57,7 +61,7 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     //MARK: EndTime Button
     //
     private func setupEndTimeButton() {
-        endTimeButton = UIButton()
+        endTimeButton = Button()
         self.contentView.addSubview(endTimeButton)
         
         endTimeButton.snp.makeConstraints { maker in
@@ -65,15 +69,19 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
             maker.trailing.equalToSuperview().inset(5)
         }
         
-        endTimeButton.apply(.gray(selectedColor: .blueAction))
+        endTimeButton.apply(.gray(selectedColor: .systemBlue))
+        endTimeButton.isSelectionPrimaryAction = true
         endTimeButton.setTitle("00:00", for: .normal)
-        endTimeButton.addTarget(self, action: #selector(endTimeButtonPressed), for: .touchUpInside)
         endTimeButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        
+        endTimeButton.action = { [weak self] button in
+            self?.endTimeButtonPressed(button: button)
+        }
         
         buttons.append(endTimeButton)
     }
     
-    @objc func endTimeButtonPressed(button: UIButton) {
+    func endTimeButtonPressed(button: UIButton) {
         datePickerSelected(from: button, dateType: .endTime)
     }
     
@@ -81,7 +89,7 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     //MARK: StartTime Button
     //
     private func setupStartTimeButton() {
-        startTimeButton = UIButton()
+        startTimeButton = Button()
         self.contentView.addSubview(startTimeButton)
         
         startTimeButton.snp.makeConstraints { maker in
@@ -89,15 +97,19 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
             maker.trailing.equalTo(endTimeButton.snp.leading).offset(-5)
         }
         
-        startTimeButton.apply(.gray(selectedColor: .blueAction))
+        startTimeButton.apply(.gray(selectedColor: .systemBlue))
+        startTimeButton.isSelectionPrimaryAction = true
         startTimeButton.setTitle("00:00", for: .normal)
-        startTimeButton.addTarget(self, action: #selector(startTimeButtonPressed), for: .touchUpInside)
         startTimeButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        
+        startTimeButton.action = { [weak self] button in
+            self?.startTimeButtonPressed(button: button)
+        }
         
         buttons.append(startTimeButton)
     }
     
-    @objc func startTimeButtonPressed(button: UIButton) {
+    func startTimeButtonPressed(button: UIButton) {
         datePickerSelected(from: button, dateType: .startTime)
     }
     
@@ -105,7 +117,6 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     //MARK: - Service
     //
     private func datePickerSelected(from button: UIButton, dateType: DatePickerType){
-        button.isSelected.toggle()
         if button.isSelected {
             buttons.forEach { $0.isSelected = $0 == button } //выключаем остальные
             if let lastPickerType { delegate?.dateCell(hidePickerOfType: lastPickerType) }

@@ -163,7 +163,7 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
                         endComps.minute? = 59
                     }
                     else{
-                        endComps.hour = dateComponents.hour
+                        endComps.hour = (dateComponents.hour ?? 0) + 1
                         endComps.minute = dateComponents.minute
                     }
                 }
