@@ -14,6 +14,7 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
     
     //Service
     private var isScrollViewAnimating = false
+    private var isScrollViewDecelerating = false
     private var isDatePickerCollapsed = false
     
     //
@@ -170,7 +171,7 @@ extension TasksListController: UIScrollViewDelegate {
         
         let offset = scrollView.contentOffset.y
         
-        if isScrollViewAnimating == false{
+        if isScrollViewAnimating == false && isScrollViewDecelerating == false{
             if offset < -80{
                 changeDatePickerState(isCollapsed: false)
             }
@@ -186,4 +187,11 @@ extension TasksListController: UIScrollViewDelegate {
         isScrollViewAnimating = false
     }
 
+    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        isScrollViewDecelerating = true
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        isScrollViewDecelerating = false
+    }
 }
