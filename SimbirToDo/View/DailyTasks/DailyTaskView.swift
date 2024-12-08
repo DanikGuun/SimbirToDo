@@ -63,12 +63,18 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
             maker.edges.equalToSuperview()
         }
         
-        let v = UIView()
+        let daySeconds: Double = 24*60*60
+        let currentProp = 3600 * 1.5 / daySeconds
+        
+        let v = TaskInfoView()
         v.backgroundColor = .tertiaryFill
         addSubview(v)
         v.snp.makeConstraints({ maker in
-            maker.edges.equalTo(mainStackView.contentLayout)
+            maker.leading.trailing.equalTo(mainStackView.contentLayout).inset(10)
+            maker.top.equalTo(mainStackView.contentLayout)
+            maker.height.equalToSuperview().multipliedBy(currentProp)
         })
+        v.backgroundColor = .clear
         
     }
     
