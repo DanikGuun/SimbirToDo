@@ -6,10 +6,8 @@ protocol TasksPresenterProtocol: UIView {
     
     var delegate: TasksPresenterDelegate? { get set }
     
-    func addTask(taskInfo: TaskInfo)
-    func reloadData()
-    func updateTask(taskInfo: TaskInfo)
-    func removeTask(taskInfo: TaskInfo)
+    func addTask(taskMeta: TaskMetadata)
+    func clearTasks()
     
 }
 

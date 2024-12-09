@@ -7,9 +7,12 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
     
     //UI
     private var mainStackView: TimeLineStackView!
+    private var taskParentView: UIView!
+    private var taskViews: Dictionary<UUID, TaskInfoView> = [:]
     
     //Service
     private var pinchStartHeight: CGFloat = 0
+    private let secondsPerDay: Double = 86400
     
     //
     //MARK: - Lifecycle
@@ -43,6 +46,7 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
         self.snp.updateConstraints{ maker in
             maker.height.equalTo(targetHeight)
             self.mainStackView.setNeedsDisplay()
+            self.layoutIfNeeded()
         }
     }
     
@@ -50,12 +54,13 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
     //MARK: - UI
     //
     private func setupUI(){
-        setupSupplementaryViews()
+        setupTimeLineStack()
+        setupTaskParentView()
     }
     
     
     //MARK: SupplementaryView
-    private func setupSupplementaryViews(){
+    private func setupTimeLineStack(){
         mainStackView = TimeLineStackView()
         self.addSubview(mainStackView)
         
@@ -63,39 +68,58 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
             maker.edges.equalToSuperview()
         }
         
-        let daySeconds: Double = 24*60*60
-        let currentProp = 3600 * 1.5 / daySeconds
+    }
+    
+    //MARK: Task Parent
+    private func setupTaskParentView(){
+        taskParentView = UIView()
+        self.addSubview(taskParentView)
         
-        let v = TaskInfoView()
-        v.backgroundColor = .tertiaryFill
-        addSubview(v)
-        v.snp.makeConstraints({ maker in
-            maker.leading.trailing.equalTo(mainStackView.contentLayout).inset(10)
-            maker.top.equalTo(mainStackView.contentLayout)
-            maker.height.equalToSuperview().multipliedBy(currentProp)
-        })
-        v.backgroundColor = .clear
+        taskParentView.snp.makeConstraints { maker in
+            maker.edges.equalTo(mainStackView.contentLayout)
+        }
         
+        taskParentView.backgroundColor = .clear
     }
     
     //
     //MARK: - Tasks Presenter Protocol
     //
     
-    func addTask(taskInfo: TaskInfo) {
+    func addTask(taskMeta: TaskMetadata) {
+        let taskInfo = taskMeta.task
+        let taskView = TaskInfoView()
+        taskParentView.addSubview(taskView)
+        if let id = taskInfo.id {
+            taskViews[id] = taskView
+        }
+        
+        let startTaskOffset = taskInfo.startTimeSeconds / secondsPerDay
+        let endTaskOffset = taskInfo.endTimeSeconds / secondsPerDay
+
+        //если брать верхний констрейн и умножать на startTaskOffset, то не работает
+        //Поэтому берем нижний + высоту
+        taskView.snp.makeConstraints { maker in
+            maker.width.equalToSuperview().dividedBy(taskMeta.maxParallelTask)
+            maker.leading.equalToSuperview().inset(Int(taskParentView.bounds.width)/taskMeta.maxParallelTask*taskMeta.position)
+            maker.height.equalToSuperview().multipliedBy(endTaskOffset - startTaskOffset)
+            maker.bottom.equalToSuperview().multipliedBy(endTaskOffset)
+        }
+        
+        taskView.tintColor = [.systemBlue, .systemRed, .systemGreen].randomElement()!
+        taskView.title = taskInfo.name
+        taskView.backgroundColor = .clear
+        
         
     }
     
-    func reloadData() {
-        
-    }
-    
-    func updateTask(taskInfo: TaskInfo) {
-        
-    }
-    
-    func removeTask(taskInfo: TaskInfo) {
-        
+    func clearTasks() {
+        taskParentView.subviews.forEach {
+            if type(of: $0) == TaskInfoView.self {
+                $0.removeFromSuperview()
+            }
+        }
+        taskViews.removeAll()
     }
     
 }

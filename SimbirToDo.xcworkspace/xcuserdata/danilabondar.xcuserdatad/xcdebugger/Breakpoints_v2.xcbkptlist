@@ -7,48 +7,34 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "41D68A82-3C7D-4B20-A7C7-D7047B9EB630"
+            uuid = "A3E5D809-BF6C-4FCE-9D64-7387E8A06935"
             shouldBeEnabled = "No"
+            condition = "currentTasks.isEmpty == false"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SimbirToDo/View/TaskEditTableView/Cells/Date/TimePickerCell.swift"
+            filePath = "SimbirToDo/Controller/TasksListController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
-            landmarkName = "dateChanged(_:)"
+            startingLineNumber = "199"
+            endingLineNumber = "199"
+            landmarkName = "generateTaskMetadata(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "9D1D9A66-1FAB-443E-B97C-00076C95C8B5"
+            uuid = "31BD359F-487A-41FC-94A1-E92C502531C7"
             shouldBeEnabled = "No"
+            condition = "currentTasksMeta.isEmpty == false"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SimbirToDo/Model/Behaviors/Process/AddingTask.swift"
+            filePath = "SimbirToDo/Controller/TasksListController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "18"
-            endingLineNumber = "18"
-            landmarkName = "process(with:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "CC575C26-4C93-42CD-A3FD-E9125AD76960"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SimbirToDo/View/TouchTrackingScrollView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "19"
-            endingLineNumber = "19"
-            landmarkName = "touchesShouldBegin(_:with:in:)"
+            startingLineNumber = "230"
+            endingLineNumber = "230"
+            landmarkName = "generateTaskMetadata(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

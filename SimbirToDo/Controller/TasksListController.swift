@@ -117,6 +117,7 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
         if #available(iOS 14.0, *) {
             datePicker.preferredDatePickerStyle = .inline
         }
+        datePicker.addTarget(self, action: #selector(datePickerDateUpdated), for: .valueChanged)
     }
     
     private func changeDatePickerState(isCollapsed: Bool){
@@ -141,6 +142,10 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
         
     }
     
+    @objc func datePickerDateUpdated(_ datePicker: UIDatePicker){
+        setTasksForDate(datePicker.date)
+    }
+    
     //MARK: Task Presenter
     private func setupTaskPresenter(){
         taskPresenterView = DailyTaskView()
@@ -160,6 +165,124 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
         
     }
     
+    //
+    //MARK: - Service
+    //
+    //MARK: Task Presenting
+    private func setTasksForDate(_ date: Date){
+        taskPresenterView.clearTasks()
+        for task in generateTaskMetadata(date){
+            print(task)
+            taskPresenterView.addTask(taskMeta: task)
+        }
+    }
+    
+    private func generateTaskMetadata(_ date: Date) -> [TaskMetadata] {
+        let calendar = Calendar.current
+        func tasksForTime(tasks: [ToDoTask], for curDate: Date) -> [ToDoTask]{
+            return tasks.filter { $0.dateStart < curDate.timeIntervalSince1970 && $0.dateEnd >= curDate.timeIntervalSince1970 }
+        }
+        
+        func metaForTime(meta: [TaskMetadata], for curDate: Date) -> [TaskMetadata]{
+            return meta.filter { $0.task.dateInterval.start.timeIntervalSince1970 < curDate.timeIntervalSince1970 && $0.task.dateInterval.end.timeIntervalSince1970 >= curDate.timeIntervalSince1970 }
+        }
+        
+        var allTasks = TaskManager.getTasksForDate(date)
+        var metadata: [TaskMetadata] = []
+        var windowMeta: [TaskMetadata] = []
+
+        var currentTime = calendar.startOfDay(for: date)
+        
+        while calendar.component(.day, from: currentTime) == calendar.component(.day, from: date){
+            
+            let currentTasks = tasksForTime(tasks: allTasks, for: currentTime)
+            
+            for windowTask in windowMeta{
+                windowTask.maxParallelTask = max(windowTask.maxParallelTask, windowMeta.count)
+                if currentTasks.contains(windowTask) == false{
+                    metadata.append(windowTask)
+                    windowMeta.removeAll { $0 == windowTask }
+                    allTasks.removeAll { $0.id == windowTask.task.id }
+                }
+            }
+            
+            
+            for task in currentTasks{
+                
+                if windowMeta.contains(toDoTask: task) == false{
+                    let meta = TaskMetadata(toDoTask: task)
+                    meta.position = windowMeta.minPosition
+                    windowMeta.append(meta)
+                }
+                
+            }
+            
+            currentTime = currentTime.addingTimeInterval(300)
+        }
+        
+        var sortedMetadata: [TaskMetadata] = []
+        windowMeta.removeAll()
+        currentTime = calendar.startOfDay(for: date)
+        
+        while calendar.component(.day, from: currentTime) == calendar.component(.day, from: date){
+            var currentTasksMeta = metaForTime(meta: metadata, for: currentTime)
+            print(currentTasksMeta.count)
+            if currentTasksMeta.isEmpty == false{
+                let maxParallelTask = ( currentTasksMeta.map { $0.maxParallelTask } ).max() ?? 0
+                currentTasksMeta.forEach { $0.maxParallelTask = maxParallelTask }
+            }
+            currentTime = currentTime.addingTimeInterval(300)
+        }
+        
+        return metadata
+    }
+    
+    
+    
+    
+    
+    
+//    private func generateTaskMetadata(_ date: Date) -> [TaskMetadata] {
+//        let calendar = Calendar.current
+//        func tasksForTime(tasks: [ToDoTask], for curDate: Date) -> [ToDoTask]{
+//            return tasks.filter { $0.dateStart < curDate.timeIntervalSince1970 && $0.dateEnd >= curDate.timeIntervalSince1970 }
+//        }
+//        
+//        var allTasks = TaskManager.getTasksForDate(date)
+//        var metadata: [TaskMetadata] = []
+//        var windowMeta: [TaskMetadata] = []
+//
+//        var currentTime = calendar.startOfDay(for: date)
+//        
+//        while calendar.component(.day, from: currentTime) == calendar.component(.day, from: date){
+//            
+//            let currentTasks = tasksForTime(tasks: allTasks, for: currentTime)
+//            
+//            for windowTask in windowMeta{
+//                windowTask.maxParallelTask = max(windowTask.maxParallelTask, windowMeta.count)
+//                if currentTasks.contains(windowTask) == false{
+//                    metadata.append(windowTask)
+//                    windowMeta.removeAll { $0 == windowTask }
+//                    allTasks.removeAll { $0.id == windowTask.task.id }
+//                }
+//            }
+//            
+//            
+//            for task in currentTasks{
+//                
+//                if windowMeta.contains(toDoTask: task) == false{
+//                    let meta = TaskMetadata(toDoTask: task)
+//                    meta.position = windowMeta.minPosition
+//                    windowMeta.append(meta)
+//                }
+//                
+//            }
+//            
+//            currentTime = currentTime.addingTimeInterval(300)
+//        }
+//        
+//        return metadata
+//    }
 }
 
 //
@@ -195,3 +318,4 @@ extension TasksListController: UIScrollViewDelegate {
         isScrollViewDecelerating = false
     }
 }
+
