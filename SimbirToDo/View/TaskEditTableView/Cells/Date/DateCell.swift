@@ -148,10 +148,14 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
     func setInfo(_ info: DateInterval) {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy"
-        formatter.dateFormat = ""
-        formatter.timeStyle = .short
+        formatter.dateStyle = .short
+        formatter.timeStyle = .none
         
         let date = formatter.string(from: info.start)
+        dayButton.setTitle(date, for: .normal)
+        
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
         
         //округляем до 5 минут путем вычитания остатка от 300 секунд
         let roundedStart = info.start.addingTimeInterval(-info.start.timeIntervalSince1970.truncatingRemainder(dividingBy: 300))
@@ -160,7 +164,6 @@ class DateCell: TaskEditCell, TaskEditCellProtocol {
         let roundedEnd = info.end.addingTimeInterval(-info.end.timeIntervalSince1970.truncatingRemainder(dividingBy: 300))
         let endTime = formatter.string(from: roundedEnd)
         
-        dayButton.setTitle(date, for: .normal)
         startTimeButton.setTitle(startTime, for: .normal)
         endTimeButton.setTitle(endTime, for: .normal)
         
