@@ -50,6 +50,11 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
         }
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.taskParentView.subviews.forEach { $0.setNeedsDisplay() }
+    }
+    
     //
     //MARK: - UI
     //
