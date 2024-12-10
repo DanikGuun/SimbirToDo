@@ -172,7 +172,7 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
     private func setTasksForDate(_ date: Date){
         taskPresenterView.clearTasks()
         for task in generateTaskMetadata(date){
-            print(task)
+            //print(task)
             taskPresenterView.addTask(taskMeta: task)
         }
     }
@@ -187,6 +187,21 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
             return meta.filter { $0.task.dateInterval.start.timeIntervalSince1970 < curDate.timeIntervalSince1970 && $0.task.dateInterval.end.timeIntervalSince1970 >= curDate.timeIntervalSince1970 }
         }
         
+        var neighbours: Dictionary<TaskMetadata, NSMutableSet> = [:]
+        func updateNeghboursMax(tasks: [TaskMetadata], updated: [TaskMetadata] = []){
+            var updated = updated
+            let max = tasks.map { $0.maxParallelTask }.max() ?? 0
+            for task in tasks{
+                task.maxParallelTask = max
+                if updated.contains(task) == false{
+                    updated.append(task)
+                    if let tasksMap = neighbours[task]?.allObjects.compactMap({ ($0 as? TaskMetadata) ?? nil }){
+                        updateNeghboursMax(tasks: tasksMap, updated: updated)
+                    }
+                }
+            }
+        }
+        
         var allTasks = TaskManager.getTasksForDate(date)
         var metadata: [TaskMetadata] = []
         var windowMeta: [TaskMetadata] = []
@@ -198,14 +213,24 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
             let currentTasks = tasksForTime(tasks: allTasks, for: currentTime)
             
             for windowTask in windowMeta{
-                windowTask.maxParallelTask = max(windowTask.maxParallelTask, windowMeta.count)
+                if windowTask.maxParallelTask <= currentTasks.count{
+                    windowTask.maxParallelTask = currentTasks.count
+                    updateNeghboursMax(tasks: [windowTask])
+                }
                 if currentTasks.contains(windowTask) == false{
                     metadata.append(windowTask)
                     windowMeta.removeAll { $0 == windowTask }
                     allTasks.removeAll { $0.id == windowTask.task.id }
                 }
+                
+                if neighbours[windowTask] == nil{
+                    neighbours[windowTask] = NSMutableSet()
+                }
+                for task in windowMeta{
+                    neighbours[windowTask]?.add(task)
+                }
+                
             }
-            
             
             for task in currentTasks{
                 
@@ -217,31 +242,15 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
                 
             }
             
-            currentTime = currentTime.addingTimeInterval(300)
-        }
-        
-        currentTime = calendar.startOfDay(for: date)
-        
-        while calendar.component(.day, from: currentTime) == calendar.component(.day, from: date){
-            var currentTasksMeta = metaForTime(meta: metadata, for: currentTime)
-            if currentTasksMeta.isEmpty == false{
-                let maxParallelTask = ( currentTasksMeta.map { $0.maxParallelTask } ).max() ?? 0
-                currentTasksMeta.forEach { $0.maxParallelTask = maxParallelTask }
+            for windowTask in windowMeta{
+                
+
+                
             }
+            
             currentTime = currentTime.addingTimeInterval(300)
         }
-        
-        currentTime = calendar.startOfDay(for: date)
-        
-        while calendar.component(.day, from: currentTime) == calendar.component(.day, from: date){
-            var currentTasksMeta = metaForTime(meta: metadata, for: currentTime)
-            if currentTasksMeta.isEmpty == false{
-                let maxParallelTask = ( currentTasksMeta.map { $0.maxParallelTask } ).max() ?? 0
-                currentTasksMeta.forEach { $0.maxParallelTask = maxParallelTask }
-            }
-            currentTime = currentTime.addingTimeInterval(300)
-        }
-        
+
         return metadata
     }
     

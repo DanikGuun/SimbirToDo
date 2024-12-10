@@ -94,7 +94,7 @@ extension TaskInfo: Equatable{
     }
 }
 
-class TaskMetadata: CustomStringConvertible{
+class TaskMetadata: Hashable, CustomStringConvertible{
     var task: TaskInfo
     var maxParallelTask: Int
     var position: Int
@@ -113,6 +113,15 @@ class TaskMetadata: CustomStringConvertible{
     
     var description: String{
         "\(task.description)\nPosition: \(position)\nMaximum parallel task: \(maxParallelTask)\n"
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        if let id = task.id{
+            hasher.combine(id)
+        }
+        hasher.combine(task.name)
+        hasher.combine(task.taskDescription)
+        hasher.combine(task.dateInterval)
     }
 }
 
