@@ -172,66 +172,81 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
     private func setTasksForDate(_ date: Date){
         taskPresenterView.clearTasks()
         for task in generateTaskMetadata(date){
-            //print(task)
             taskPresenterView.addTask(taskMeta: task)
         }
     }
     
+    ///Создание меты для заданий (Позиция, макс. кол-во одновременных заданий)
     private func generateTaskMetadata(_ date: Date) -> [TaskMetadata] {
         let calendar = Calendar.current
+        
+        //Задания для конкретного момента времени
         func tasksForTime(tasks: [ToDoTask], for curDate: Date) -> [ToDoTask]{
             return tasks.filter { $0.dateStart < curDate.timeIntervalSince1970 && $0.dateEnd >= curDate.timeIntervalSince1970 }
         }
         
+        //Мета для конкретного момента времени
         func metaForTime(meta: [TaskMetadata], for curDate: Date) -> [TaskMetadata]{
             return meta.filter { $0.task.dateInterval.start.timeIntervalSince1970 < curDate.timeIntervalSince1970 && $0.task.dateInterval.end.timeIntervalSince1970 >= curDate.timeIntervalSince1970 }
         }
         
+        //Соседи для задания (Чтобы ставить макс. значение сразу на весь блок заданий)
         var neighbours: Dictionary<TaskMetadata, NSMutableSet> = [:]
         func updateNeghboursMax(tasks: [TaskMetadata], updated: [TaskMetadata] = []){
             var updated = updated
             let max = tasks.map { $0.maxParallelTask }.max() ?? 0
+            
             for task in tasks{
                 task.maxParallelTask = max
+                
                 if updated.contains(task) == false{
                     updated.append(task)
                     if let tasksMap = neighbours[task]?.allObjects.compactMap({ ($0 as? TaskMetadata) ?? nil }){
                         updateNeghboursMax(tasks: tasksMap, updated: updated)
                     }
                 }
+                
             }
+            
         }
         
-        var allTasks = TaskManager.getTasksForDate(date)
-        var metadata: [TaskMetadata] = []
-        var windowMeta: [TaskMetadata] = []
+        
+        var allTasks = TaskManager.getTasksForDate(date)//все задания на день
+        var metadata: [TaskMetadata] = [] //мета
+        var windowMeta: [TaskMetadata] = [] //окно с текущей метой
 
-        var currentTime = calendar.startOfDay(for: date)
+        var currentTime = calendar.startOfDay(for: date) //Дата по которой смотрим задания, сдвигаем на 5 мин.
         
         while calendar.component(.day, from: currentTime) == calendar.component(.day, from: date){
             
             let currentTasks = tasksForTime(tasks: allTasks, for: currentTime)
             
             for windowTask in windowMeta{
+                //Обновляем максимум одновременных заданий, если необходимо
                 if windowTask.maxParallelTask <= currentTasks.count{
                     windowTask.maxParallelTask = currentTasks.count
                     updateNeghboursMax(tasks: [windowTask])
                 }
+                //
+                
+                //Если текщего заданий нет в заданиях на это время, значит оно кончилось, убираем с окна, переносим в мету
                 if currentTasks.contains(windowTask) == false{
                     metadata.append(windowTask)
                     windowMeta.removeAll { $0 == windowTask }
                     allTasks.removeAll { $0.id == windowTask.task.id }
                 }
+                //
                 
+                //Обновляем список соседей
                 if neighbours[windowTask] == nil{
                     neighbours[windowTask] = NSMutableSet()
                 }
-                for task in windowMeta{
-                    neighbours[windowTask]?.add(task)
-                }
+                windowMeta.forEach { neighbours[windowTask]?.add($0) }
+                //
                 
             }
             
+            //Если задания нет в окне, т.е. встретилось первый раз, добавляем и задаем мин. позицию
             for task in currentTasks{
                 
                 if windowMeta.contains(toDoTask: task) == false{
@@ -241,65 +256,14 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
                 }
                 
             }
-            
-            for windowTask in windowMeta{
-                
-
-                
-            }
+            //
             
             currentTime = currentTime.addingTimeInterval(300)
         }
 
         return metadata
     }
-    
-    
-    
-    
-    
-    
-//    private func generateTaskMetadata(_ date: Date) -> [TaskMetadata] {
-//        let calendar = Calendar.current
-//        func tasksForTime(tasks: [ToDoTask], for curDate: Date) -> [ToDoTask]{
-//            return tasks.filter { $0.dateStart < curDate.timeIntervalSince1970 && $0.dateEnd >= curDate.timeIntervalSince1970 }
-//        }
-//        
-//        var allTasks = TaskManager.getTasksForDate(date)
-//        var metadata: [TaskMetadata] = []
-//        var windowMeta: [TaskMetadata] = []
-//
-//        var currentTime = calendar.startOfDay(for: date)
-//        
-//        while calendar.component(.day, from: currentTime) == calendar.component(.day, from: date){
-//            
-//            let currentTasks = tasksForTime(tasks: allTasks, for: currentTime)
-//            
-//            for windowTask in windowMeta{
-//                windowTask.maxParallelTask = max(windowTask.maxParallelTask, windowMeta.count)
-//                if currentTasks.contains(windowTask) == false{
-//                    metadata.append(windowTask)
-//                    windowMeta.removeAll { $0 == windowTask }
-//                    allTasks.removeAll { $0.id == windowTask.task.id }
-//                }
-//            }
-//            
-//            
-//            for task in currentTasks{
-//                
-//                if windowMeta.contains(toDoTask: task) == false{
-//                    let meta = TaskMetadata(toDoTask: task)
-//                    meta.position = windowMeta.minPosition
-//                    windowMeta.append(meta)
-//                }
-//                
-//            }
-//            
-//            currentTime = currentTime.addingTimeInterval(300)
-//        }
-//        
-//        return metadata
-//    }
+
 }
 
 //

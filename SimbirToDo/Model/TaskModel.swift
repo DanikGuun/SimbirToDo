@@ -1,6 +1,10 @@
 
 import RealmSwift
 
+//
+//MARK: - ToDoTask
+//
+///Объект для хранения в Realm
 class ToDoTask: Object {
     let id = UUID()
     @Persisted dynamic var title: String
@@ -18,6 +22,7 @@ class ToDoTask: Object {
 
 extension Array<ToDoTask> {
     
+    //для создания меты
     func contains(_ taskMeta: TaskMetadata) -> Bool{
         for task in self{
             if task.id == taskMeta.task.id { return true }
@@ -32,7 +37,10 @@ enum TaskProcessType{
     case edit
 }
 
-///ToDoTask для проброски во вьюшки, чтобы не привязывать их к модели
+//
+//MARK: - TaskInfo
+//
+///Информация о задании, чтобы добавлять во сью и не связывать её с моделю
 struct TaskInfo: CustomStringConvertible{
     let id: UUID?
     let name: String
@@ -84,7 +92,12 @@ struct TaskInfo: CustomStringConvertible{
     }
     
     var description: String{
-        "ID: \(id)\nName: \(name)\nTask description: \(taskDescription)\nDate interval: \(dateInterval)"
+        var description: String = ""
+        if let id = id { description.append("ID: \(id)\n") }
+        description.append("Name: \(name)")
+        description.append("\nTask description: \(taskDescription)")
+        description.append("Date interval: \(dateInterval)")
+        return description
     }
 }
 
@@ -94,6 +107,10 @@ extension TaskInfo: Equatable{
     }
 }
 
+//
+//MARK: - TaskMetaData
+//
+///Содержит доп инфу для отображения, макс. кол-во задач в блоке, позиция задачи
 class TaskMetadata: Hashable, CustomStringConvertible{
     var task: TaskInfo
     var maxParallelTask: Int
@@ -123,15 +140,20 @@ class TaskMetadata: Hashable, CustomStringConvertible{
         hasher.combine(task.taskDescription)
         hasher.combine(task.dateInterval)
     }
+    
 }
 
 extension TaskMetadata: Equatable{
+    
     static func == (lhs: TaskMetadata, rhs: TaskMetadata) -> Bool {
         lhs.task == rhs.task
     }
+    
 }
 
 extension Array<TaskMetadata>{
+    
+    //Смотрим наличие задания по id
     func contains(toDoTask: ToDoTask) -> Bool{
         for task in self{
             if let id = task.task.id, id == toDoTask.id{
@@ -141,20 +163,13 @@ extension Array<TaskMetadata>{
         return false
     }
     
+    //Минимальная возможная позиция в блоке
     var minPosition: Int{
         let positions = self.map { $0.position }
         for position in 0..<self.count{
             if positions.contains(position) == false { return position }
         }
         return self.count
-    }
-    
-    var maxPosition: Int{
-        let positions = self.map { $0.position }
-        for position in stride(from: self.count-1, to: 0, by: -1){
-            if positions.contains(position) == false { return position }
-        }
-        return 0
     }
     
 }
