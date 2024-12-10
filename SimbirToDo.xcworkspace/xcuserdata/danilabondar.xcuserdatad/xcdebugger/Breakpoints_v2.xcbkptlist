@@ -21,22 +21,5 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "31BD359F-487A-41FC-94A1-E92C502531C7"
-            shouldBeEnabled = "No"
-            condition = "currentTasksMeta.isEmpty == false"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SimbirToDo/Controller/TasksListController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "230"
-            endingLineNumber = "230"
-            landmarkName = "generateTaskMetadata(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

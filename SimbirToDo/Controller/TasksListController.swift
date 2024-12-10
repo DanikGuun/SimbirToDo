@@ -220,13 +220,21 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
             currentTime = currentTime.addingTimeInterval(300)
         }
         
-        var sortedMetadata: [TaskMetadata] = []
-        windowMeta.removeAll()
         currentTime = calendar.startOfDay(for: date)
         
         while calendar.component(.day, from: currentTime) == calendar.component(.day, from: date){
             var currentTasksMeta = metaForTime(meta: metadata, for: currentTime)
-            print(currentTasksMeta.count)
+            if currentTasksMeta.isEmpty == false{
+                let maxParallelTask = ( currentTasksMeta.map { $0.maxParallelTask } ).max() ?? 0
+                currentTasksMeta.forEach { $0.maxParallelTask = maxParallelTask }
+            }
+            currentTime = currentTime.addingTimeInterval(300)
+        }
+        
+        currentTime = calendar.startOfDay(for: date)
+        
+        while calendar.component(.day, from: currentTime) == calendar.component(.day, from: date){
+            var currentTasksMeta = metaForTime(meta: metadata, for: currentTime)
             if currentTasksMeta.isEmpty == false{
                 let maxParallelTask = ( currentTasksMeta.map { $0.maxParallelTask } ).max() ?? 0
                 currentTasksMeta.forEach { $0.maxParallelTask = maxParallelTask }
