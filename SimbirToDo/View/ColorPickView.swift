@@ -9,6 +9,7 @@ class ColorPickView: UIControl {
     
     //UI
     var color: UIColor = .systemBlue { didSet { circleLayer.fillColor = color.cgColor } }
+    var strokeColor: UIColor = .gray { didSet { strokeLayer.strokeColor = strokeColor.cgColor } }
     var selectedInset: CGFloat = 5
     override var bounds: CGRect { didSet { updateBounds() } }
     override var isSelected: Bool { didSet { animCircleLayer(isSelected: isSelected); animStrokeLayer(isSelected: isSelected) } }
@@ -43,7 +44,7 @@ class ColorPickView: UIControl {
         let sign: CGFloat = isSelected ? 1 : 0
         
         let anim = CABasicAnimation(keyPath: "path")
-        let path = CGPath(ellipseIn: self.bounds.insetBy(dx: selectedInset * sign, dy: selectedInset * sign), transform: nil)
+        let path = CGPath(ellipseIn: self.bounds.insetBy(dx: selectedInset * sign, dy: selectedInset * sign).centerSquare, transform: nil)
         anim.fromValue = circleLayer.path
         anim.toValue = path
         anim.duration = 0.05
@@ -57,7 +58,7 @@ class ColorPickView: UIControl {
         
         self.layer.addSublayer(strokeLayer)
         strokeLayer.fillColor = nil
-        strokeLayer.strokeColor = UIColor.systemPink.cgColor
+        strokeLayer.strokeColor = strokeColor.cgColor
         strokeLayer.lineWidth = 0
         
     }
@@ -78,8 +79,8 @@ class ColorPickView: UIControl {
     //MARK: - Other
     //
     private func updateBounds(){
-        var circleRect = self.bounds
-        var strokeRect = self.bounds.insetBy(dx: 2, dy: 2)
+        var circleRect = self.bounds.centerSquare
+        var strokeRect = self.bounds.insetBy(dx: 2, dy: 2).centerSquare
         
         if isSelected{
             circleRect = circleRect.insetBy(dx: selectedInset, dy: selectedInset)
@@ -91,4 +92,11 @@ class ColorPickView: UIControl {
         strokeLayer.path = CGPath(ellipseIn: strokeRect, transform: nil)
     }
     
+}
+
+private extension CGRect {
+    var centerSquare: CGRect {
+        let minEdge = min(width, height)
+        return CGRect(x: self.midX - minEdge / 2, y: self.midY - minEdge / 2, width: minEdge, height: minEdge)
+    }
 }
