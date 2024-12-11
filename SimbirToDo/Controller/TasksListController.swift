@@ -30,6 +30,14 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
         setupUI()
     }
 
+    var isInitialAppear: Bool = true
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        taskPresenterView.clearTasks()
+        setTasksForDate(datePicker.date)
+    }
+    
     private func setup(){
         self.view.backgroundColor = .primaryContollerBackground
         self.navigationItem.title = "Задачи"

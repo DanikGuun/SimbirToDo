@@ -74,6 +74,7 @@ class TaskEditContoller: UIViewController {
         
         let accept: (() -> Void) = { [weak self] in
             self?.deletionBehavior?.delete()
+            self?.navigationController?.popViewController(animated: true)
         }
         
         self.confirmAlert(title: "Вы уверены, что хотите удалить задачу?", accept: accept)

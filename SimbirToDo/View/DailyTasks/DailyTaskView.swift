@@ -96,6 +96,9 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
         let taskView = TaskInfoView()
         taskParentView.addSubview(taskView)
         
+        taskParentView.setNeedsLayout()
+        taskParentView.layoutIfNeeded()
+        
         let startTaskOffset = taskInfo.startTimeSeconds / secondsPerDay
         let endTaskOffset = taskInfo.endTimeSeconds / secondsPerDay
 
