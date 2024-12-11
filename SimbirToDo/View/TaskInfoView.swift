@@ -64,17 +64,8 @@ class TaskInfoView: UIControl {
         titleLabel.numberOfLines = 0
         titleLabel.textColor = .opagueText
         
-        self.addTarget(self, action: #selector(inside), for: .touchDown)
     }
     
-    @objc private func inside(){
-        backgroundAlpha = 0.8
-    }
-    
-    //
-    //MARK: - Touches
-    //
-
     
     //
     //MARK: Draw

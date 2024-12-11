@@ -116,7 +116,10 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
         taskView.id = taskInfo.id
         taskView.backgroundColor = .clear
         
-        taskView.addTarget(self, action: #selector(taskViewSelected), for: .touchUpInside)
+        let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(taskViewLongPressed))
+        taskView.addGestureRecognizer(longGesture)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(taskViewTapped))
+        taskView.addGestureRecognizer(tapGesture)
     }
     
     func clearTasks() {
@@ -128,9 +131,16 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
     }
     
     //NonProtocol
-    @objc private func taskViewSelected(_ taskView: TaskInfoView){
+    
+    @objc private func taskViewTapped(_ gesture: UITapGestureRecognizer){
+        guard let taskView = gesture.view as? TaskInfoView else { return }
+        taskView.isSelected = true
         if let id = taskView.id{
             delegate?.tasksPresenter(requestToEditTaskWith: id)
         }
+    }
+    
+    @objc private func taskViewLongPressed(_ gesture: UILongPressGestureRecognizer){
+        
     }
 }
