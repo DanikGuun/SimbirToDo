@@ -19,7 +19,9 @@ class TaskEditControllerFabric{
             deleteBehavior = DeleteTask(task: task)
         }
         
-        return TaskEditContoller(taskProcessBehavior: processBehavior, deletionBehavior: deleteBehavior)
+        let controller = TaskEditContoller(taskProcessBehavior: processBehavior, deletionBehavior: deleteBehavior)
+        controller.navigationItem.title = task?.title
+        return controller
     }
     
 }
