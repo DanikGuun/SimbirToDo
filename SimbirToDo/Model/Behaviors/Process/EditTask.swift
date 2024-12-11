@@ -8,14 +8,12 @@ class EditTask: TaskProcessBehavior{
     
     func process(with info: TaskInfo) {
         
-        task.title = info.name
-        task.taskDescription = info.taskDescription
-        task.dateStart = info.dateInterval.start.timeIntervalSince1970
-        task.dateEnd = info.dateInterval.end.timeIntervalSince1970
-        
         do{
             try realm?.write {
-                realm?.add(task, update: .modified)
+                task.title = info.name
+                task.taskDescription = info.taskDescription
+                task.dateStart = info.dateInterval.start.timeIntervalSince1970
+                task.dateEnd = info.dateInterval.end.timeIntervalSince1970
             }
         }
         catch { print("Error to submit task: \(error.localizedDescription)") }

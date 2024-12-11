@@ -1,7 +1,7 @@
 
 import UIKit
 
-class TaskInfoView: UIView{
+class TaskInfoView: UIControl {
     
     //UI
     private var titleLabel: UILabel!
@@ -10,6 +10,8 @@ class TaskInfoView: UIView{
     //Design
     var leftLineWidth: CGFloat = 4 { didSet { self.setNeedsDisplay() } }
     var cornerRadius: CGFloat = 5 { didSet { self.setNeedsDisplay() } }
+    override var isSelected: Bool{ didSet { backgroundAlpha = isSelected ? 0.8 : 0.3 } }
+    private var backgroundAlpha: CGFloat = 0.3 { didSet { self.setNeedsDisplay() } }
     
     //Service
     var title: String? { didSet { self.titleLabel?.text = title } }
@@ -36,6 +38,7 @@ class TaskInfoView: UIView{
     
     private func setup(){
         setupUI()
+        isSelected = false
     }
     
     //
@@ -60,9 +63,22 @@ class TaskInfoView: UIView{
         titleLabel.text = title
         titleLabel.numberOfLines = 0
         titleLabel.textColor = .opagueText
+        
+        self.addTarget(self, action: #selector(inside), for: .touchDown)
     }
     
+    @objc private func inside(){
+        backgroundAlpha = 0.8
+    }
+    
+    //
+    //MARK: - Touches
+    //
+
+    
+    //
     //MARK: Draw
+    //
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         
@@ -71,7 +87,7 @@ class TaskInfoView: UIView{
         clipPath.addClip()
         
         //Back
-        self.tintColor?.withAlphaComponent(0.3).set()
+        self.tintColor?.withAlphaComponent(backgroundAlpha).set()
         
         let backRectanglePath = UIBezierPath(rect: rect)
         backRectanglePath.fill()

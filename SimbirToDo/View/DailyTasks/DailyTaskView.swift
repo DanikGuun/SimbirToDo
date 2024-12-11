@@ -8,7 +8,6 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
     //UI
     private var mainStackView: TimeLineStackView!
     private var taskParentView: UIView!
-    private var taskViews: Dictionary<UUID, TaskInfoView> = [:]
     
     //Service
     private var pinchStartHeight: CGFloat = 0
@@ -93,11 +92,9 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
     
     func addTask(taskMeta: TaskMetadata) {
         let taskInfo = taskMeta.task
+        
         let taskView = TaskInfoView()
         taskParentView.addSubview(taskView)
-        if let id = taskInfo.id {
-            taskViews[id] = taskView
-        }
         
         let startTaskOffset = taskInfo.startTimeSeconds / secondsPerDay
         let endTaskOffset = taskInfo.endTimeSeconds / secondsPerDay
@@ -113,9 +110,10 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
         
         taskView.tintColor = [.systemBlue, .systemRed, .systemGreen].randomElement()!
         taskView.title = taskInfo.name
+        taskView.id = taskInfo.id
         taskView.backgroundColor = .clear
         
-        
+        taskView.addTarget(self, action: #selector(taskViewSelected), for: .touchUpInside)
     }
     
     func clearTasks() {
@@ -124,7 +122,12 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
                 $0.removeFromSuperview()
             }
         }
-        taskViews.removeAll()
     }
     
+    //NonProtocol
+    @objc private func taskViewSelected(_ taskView: TaskInfoView){
+        if let id = taskView.id{
+            delegate?.tasksPresenter(requestToEditTaskWith: id)
+        }
+    }
 }

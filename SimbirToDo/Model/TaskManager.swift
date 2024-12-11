@@ -3,6 +3,18 @@ import RealmSwift
 
 class TaskManager{
     
+    class func getTask(id: UUID?) -> ToDoTask? {
+        guard let realm = try? Realm(), let id = id else { return nil }
+        //print(id)
+        //print("\n")
+        for t in realm.objects(ToDoTask.self) {
+            //print(t.id)
+        }
+        return realm.objects(ToDoTask.self).first { $0.id == id }
+        //print("\n\n")
+    }
+    
+    //Задания на определенный день
     class func getTasksForDate(_ date: Date) -> [ToDoTask] {
         var tasks: [ToDoTask] = []
         

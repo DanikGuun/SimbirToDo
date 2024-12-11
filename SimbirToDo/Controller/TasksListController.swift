@@ -162,12 +162,14 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
     }
     
     func tasksPresenter(requestToEditTaskWith id: UUID) {
-        
+        guard let controller = TaskEditControllerFabric.create(taskId: id, type: .edit) else { return }
+        self.navigationController?.pushViewController(controller, animated: true)
     }
     
     //
     //MARK: - Service
     //
+    
     //MARK: Task Presenting
     private func setTasksForDate(_ date: Date){
         taskPresenterView.clearTasks()

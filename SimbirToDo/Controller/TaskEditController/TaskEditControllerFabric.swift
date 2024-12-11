@@ -1,9 +1,13 @@
 
+import Foundation
+
 class TaskEditControllerFabric{
     
-    public class func create(task: ToDoTask? = nil, type: TaskProcessType) -> TaskEditContoller? {
+    public class func create(taskId: UUID? = nil, type: TaskProcessType) -> TaskEditContoller? {
         let processBehavior: TaskProcessBehavior
         let deleteBehavior: DeletionBehavior?
+        
+        let task = TaskManager.getTask(id: taskId)
         
         switch type {
         case .add:
