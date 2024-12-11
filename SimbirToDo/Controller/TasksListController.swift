@@ -192,12 +192,12 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
         
         //Задания для конкретного момента времени
         func tasksForTime(tasks: [ToDoTask], for curDate: Date) -> [ToDoTask]{
-            return tasks.filter { $0.dateStart < curDate.timeIntervalSince1970 && $0.dateEnd >= curDate.timeIntervalSince1970 }
+            return tasks.filter { $0.dateStart < curDate.timeIntervalSince1970 && $0.dateEnd > curDate.timeIntervalSince1970 }
         }
         
         //Мета для конкретного момента времени
         func metaForTime(meta: [TaskMetadata], for curDate: Date) -> [TaskMetadata]{
-            return meta.filter { $0.task.dateInterval.start.timeIntervalSince1970 < curDate.timeIntervalSince1970 && $0.task.dateInterval.end.timeIntervalSince1970 >= curDate.timeIntervalSince1970 }
+            return meta.filter { $0.task.dateInterval.start.timeIntervalSince1970 < curDate.timeIntervalSince1970 && $0.task.dateInterval.end.timeIntervalSince1970 > curDate.timeIntervalSince1970 }
         }
         
         //Соседи для задания (Чтобы ставить макс. значение сразу на весь блок заданий)
@@ -268,7 +268,7 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
             }
             //
             
-            currentTime = currentTime.addingTimeInterval(300)
+            currentTime = currentTime.addingTimeInterval(60)
         }
 
         return metadata

@@ -7,23 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A3E5D809-BF6C-4FCE-9D64-7387E8A06935"
-            shouldBeEnabled = "No"
-            condition = "currentTasks.isEmpty == false"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SimbirToDo/Controller/TasksListController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "233"
-            endingLineNumber = "233"
-            landmarkName = "generateTaskMetadata(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "C2646A40-27BD-4ADB-8579-CD0F4E68ED2C"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
