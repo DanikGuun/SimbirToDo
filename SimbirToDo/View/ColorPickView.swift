@@ -1,7 +1,7 @@
 
 import UIKit
 
-class ColorPickView: UIControl {
+class ColorPickView: UIControl, CAAnimationDelegate {
     
     //Layers
     private var circleLayer = CAShapeLayer()
@@ -12,7 +12,11 @@ class ColorPickView: UIControl {
     var strokeColor: UIColor = .gray { didSet { strokeLayer.strokeColor = strokeColor.cgColor } }
     var selectedInset: CGFloat = 5
     override var bounds: CGRect { didSet { updateBounds() } }
-    override var isSelected: Bool { didSet { animCircleLayer(isSelected: isSelected); animStrokeLayer(isSelected: isSelected) } }
+    override var isSelected: Bool { willSet {
+        if isSelected != newValue{
+            animCircleLayer(isSelected: newValue); animStrokeLayer(isSelected: newValue)
+        }
+    } }
     
     //
     //MARK: - Lifecycle
@@ -38,19 +42,27 @@ class ColorPickView: UIControl {
     private func setupCircleLayer(){
         self.layer.addSublayer(circleLayer)
         circleLayer.fillColor = UIColor.systemBlue.cgColor
+        animCircleLayer(isSelected: isSelected)
     }
     
     private func animCircleLayer(isSelected: Bool){
         let sign: CGFloat = isSelected ? 1 : 0
+        let path = CGPath(ellipseIn: self.bounds.insetBy(dx: selectedInset * sign, dy: selectedInset * sign).centerSquare, transform: nil)
+            
         
         let anim = CABasicAnimation(keyPath: "path")
-        let path = CGPath(ellipseIn: self.bounds.insetBy(dx: selectedInset * sign, dy: selectedInset * sign).centerSquare, transform: nil)
         anim.fromValue = circleLayer.path
         anim.toValue = path
-        anim.duration = 0.05
+        anim.duration = 0.25
         anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        anim.delegate = self
         self.circleLayer.add(anim, forKey: "path")
         circleLayer.path = path
+        
+    }
+    
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+
     }
     
     //MARK: - Setup Stroke Layer
@@ -60,19 +72,22 @@ class ColorPickView: UIControl {
         strokeLayer.fillColor = nil
         strokeLayer.strokeColor = strokeColor.cgColor
         strokeLayer.lineWidth = 0
+        animStrokeLayer(isSelected: isSelected)
         
     }
     
     private func animStrokeLayer(isSelected: Bool){
         
         let anim = CABasicAnimation(keyPath: "lineWidth")
-        anim.fromValue = strokeLayer.lineWidth
+        anim.fromValue = isSelected ? 0 : 3
         anim.toValue = isSelected ? 3 : 0
         anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        anim.duration = 0.1
+        anim.duration = 0.15
+        anim.delegate = self
+        strokeLayer.lineWidth = isSelected ? 3 : 0
         self.strokeLayer.add(anim, forKey: "lineWidth")
         
-        strokeLayer.lineWidth = isSelected ? 3 : 0
+        
     }
     
     //
@@ -80,11 +95,11 @@ class ColorPickView: UIControl {
     //
     private func updateBounds(){
         var circleRect = self.bounds.centerSquare
-        var strokeRect = self.bounds.insetBy(dx: 2, dy: 2).centerSquare
+        let strokeRect = self.bounds.insetBy(dx: 2, dy: 2).centerSquare
+        
         
         if isSelected{
             circleRect = circleRect.insetBy(dx: selectedInset, dy: selectedInset)
-            strokeRect = strokeRect.insetBy(dx: selectedInset, dy: selectedInset)
         }
         
         circleLayer.path = CGPath(ellipseIn: circleRect, transform: nil)

@@ -11,12 +11,31 @@ class ToDoTask: Object {
     @Persisted dynamic var taskDescription: String
     @Persisted dynamic var dateStart: Double //TimeStamp
     @Persisted dynamic var dateEnd: Double //TimeStamp
+    @Persisted dynamic private var colorData: Data
+    
+    var color: UIColor{
+        get{
+            if let color = try? NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: colorData){
+                return color
+            }
+            return .systemBlue
+        }
+        set{
+            if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false){
+                colorData = data
+            }
+            else{
+                colorData = Data()
+            }
+        }
+    }
     
     override init() {
         self.title = ""
         self.taskDescription = ""
         self.dateStart = Date().timeIntervalSince1970
         self.dateEnd = Date(timeIntervalSinceNow: 3600).timeIntervalSince1970
+        
     }
 }
 
@@ -44,8 +63,9 @@ enum TaskProcessType{
 struct TaskInfo: CustomStringConvertible{
     let id: UUID?
     let name: String
-    let taskDescription: String
     let dateInterval: DateInterval
+    let color: UIColor
+    let taskDescription: String
     
     ///время начала дела с начала дня в секундах
     var startTimeSeconds: Double{
@@ -61,15 +81,16 @@ struct TaskInfo: CustomStringConvertible{
         return Double(hours * 3600 + minutes * 60)
     }
     
-    init(id: UUID?, name: String, taskDescription: String, dateInterval: DateInterval){
+    init(id: UUID? = nil, name: String, taskDescription: String, dateInterval: DateInterval, color: UIColor){
         self.id = id
         self.name = name
         self.taskDescription = taskDescription
         self.dateInterval = dateInterval
+        self.color = color
     }
     
     init (name: String, taskDescription: String, dateInterval: DateInterval){
-        self.init(id: nil, name: name, taskDescription: taskDescription, dateInterval: dateInterval)
+        self.init(id: nil, name: name, taskDescription: taskDescription, dateInterval: dateInterval, color: .black)
     }
     
     init (task: ToDoTask?){
@@ -77,18 +98,20 @@ struct TaskInfo: CustomStringConvertible{
         var taskDescription = ""
         var dateInterval = DateInterval(start: Date(), duration: 3600)
         var id: UUID? = nil
+        var color: UIColor = .black
         
         if let task{
             name = task.title
             taskDescription = task.taskDescription
             id = task.id
+            color = task.color
             
             let startDate = Date(timeIntervalSince1970: task.dateStart)
             let endDate = Date(timeIntervalSince1970: task.dateEnd)
             dateInterval = DateInterval(start: startDate, end: endDate)
         }
         
-        self.init(id: id, name: name, taskDescription: taskDescription, dateInterval: dateInterval)
+        self.init(id: id, name: name, taskDescription: taskDescription, dateInterval: dateInterval, color: color)
     }
     
     var description: String{

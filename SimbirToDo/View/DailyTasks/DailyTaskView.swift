@@ -111,7 +111,7 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
             maker.bottom.equalToSuperview().multipliedBy(endTaskOffset)
         }
         
-        taskView.tintColor = [.systemBlue, .systemRed, .systemGreen].randomElement()!
+        taskView.tintColor = taskInfo.color
         taskView.title = taskInfo.name
         taskView.id = taskInfo.id
         taskView.backgroundColor = .clear

@@ -9,9 +9,10 @@ class AddTask: TaskProcessBehavior{
     func process(with info: TaskInfo) {
         
         task.title = info.name
-        task.taskDescription = info.taskDescription
         task.dateStart = info.dateInterval.start.timeIntervalSince1970
         task.dateEnd = info.dateInterval.end.timeIntervalSince1970
+        task.color = info.color
+        task.taskDescription = info.taskDescription
         
         do{
             try realm?.write {

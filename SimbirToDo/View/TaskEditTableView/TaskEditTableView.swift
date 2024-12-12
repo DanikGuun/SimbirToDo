@@ -49,9 +49,10 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
         
         self.register(NameCell.self, forCellReuseIdentifier: CellID.name.rawValue)
         self.register(DateCell.self, forCellReuseIdentifier: CellID.date.rawValue)
-        self.register(DescriptionCell.self, forCellReuseIdentifier: CellID.description.rawValue)
-        self.register(TimePickerCell.self, forCellReuseIdentifier: CellID.timePicker.rawValue)
         self.register(DatePickerCell.self, forCellReuseIdentifier: CellID.datePicker.rawValue)
+        self.register(TimePickerCell.self, forCellReuseIdentifier: CellID.timePicker.rawValue)
+        self.register(ColorPickerCell.self, forCellReuseIdentifier: CellID.colorPicker.rawValue)
+        self.register(DescriptionCell.self, forCellReuseIdentifier: CellID.description.rawValue)
     }
     
     //
@@ -59,12 +60,12 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
     //
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section{
-        case 0, 2: return 1
+        case 0, 2, 3: return 1
         case 1: return isPickerExpanded ? 2 : 1
         default: return 0
         }
@@ -77,13 +78,13 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
         //Имя
         case (0, 0):
             let cell = tableView.dequeueReusableCell(withIdentifier: CellID.name.rawValue, for: indexPath) as! NameCell
-            infoCells[.name, default: nil] = cell
+            infoCells[.name] = cell
             return cell
             
         //Дата
         case (1, 0):
             let cell = tableView.dequeueReusableCell(withIdentifier: CellID.date.rawValue, for: indexPath) as! DateCell
-            infoCells[.dateInterval, default: nil] = cell
+            infoCells[.dateInterval] = cell
             cell.delegate = self
             return cell
         
@@ -111,10 +112,15 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
             }
             return cell
             
-        //Описание, если свернут/нет выбор даты
         case (2, 0):
+            let cell = tableView.dequeueReusableCell(withIdentifier: CellID.colorPicker.rawValue, for: indexPath) as! ColorPickerCell
+            infoCells[.color] = cell
+            return cell
+            
+        //Описание
+        case (3, 0):
             let cell = tableView.dequeueReusableCell(withIdentifier: CellID.description.rawValue, for: indexPath) as! DescriptionCell
-            infoCells[.description, default: nil] = cell
+            infoCells[.description] = cell
             return cell
         
         default:
@@ -190,27 +196,31 @@ class TaskEditTableView: UITableView, UITableViewDataSource, TaskEditerProtocol{
     func setInfo(_ info: TaskInfo) {
         
         let nameCell = infoCells[.name] as? NameCell
-        let description = infoCells[.description] as? DescriptionCell
-        let dateInterval = infoCells[.dateInterval] as? DateCell
+        let dateIntervalCell = infoCells[.dateInterval] as? DateCell
+        let colorCell = infoCells[.color] as? ColorPickerCell
+        let descriptionCell = infoCells[.description] as? DescriptionCell
         
         nameCell?.setInfo(info.name)
-        description?.setInfo(info.taskDescription)
-        dateInterval?.setInfo(info.dateInterval)
+        descriptionCell?.setInfo(info.taskDescription)
+        colorCell?.setInfo(info.color)
+        dateIntervalCell?.setInfo(info.dateInterval)
         
     }
     
     func getInfo() -> TaskInfo? {
         
         guard let nameCell = infoCells[.name] as? NameCell,
-        let descriptionCell = infoCells[.description] as? DescriptionCell,
-        let dateIntervalCell = infoCells[.dateInterval] as? DateCell
+              let colorCell = infoCells[.color] as? ColorPickerCell,
+              let dateIntervalCell = infoCells[.dateInterval] as? DateCell,
+                let descriptionCell = infoCells[.description] as? DescriptionCell
         else { return nil }
         
         let name = nameCell.getInfo()
-        let description = descriptionCell.getInfo()
         let dateInterval = dateIntervalCell.getInfo()
+        let color = colorCell.getInfo()
+        let description = descriptionCell.getInfo()
         
-        return TaskInfo(name: name, taskDescription: description, dateInterval: dateInterval)
+        return TaskInfo(name: name, taskDescription: description, dateInterval: dateInterval, color: color)
         
     }
 }
@@ -264,6 +274,7 @@ enum CellID: String{
     case date = "date"
     case datePicker = "datePicker"
     case timePicker = "timePicker"
+    case colorPicker = "colorPicker"
     case description = "description"
 }
 
@@ -271,6 +282,7 @@ enum CellID: String{
 private enum InfoType{
     case name
     case dateInterval
+    case color
     case description
 }
 

@@ -30,7 +30,6 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
         setupUI()
     }
 
-    var isInitialAppear: Bool = true
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -150,7 +149,7 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
         
     }
     
-    @objc func datePickerDateUpdated(_ datePicker: UIDatePicker){
+    @objc private func datePickerDateUpdated(_ datePicker: UIDatePicker){
         setTasksForDate(datePicker.date)
     }
     

@@ -11,9 +11,10 @@ class EditTask: TaskProcessBehavior{
         do{
             try realm?.write {
                 task.title = info.name
-                task.taskDescription = info.taskDescription
                 task.dateStart = info.dateInterval.start.timeIntervalSince1970
                 task.dateEnd = info.dateInterval.end.timeIntervalSince1970
+                task.color = info.color
+                task.taskDescription = info.taskDescription
             }
         }
         catch { print("Error to submit task: \(error.localizedDescription)") }

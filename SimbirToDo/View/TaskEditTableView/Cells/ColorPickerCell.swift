@@ -6,6 +6,7 @@ class ColorPickerCell: TaskEditCell, TaskEditCellProtocol {
     
     //UI
     private var mainStackView: UIStackView!
+    private var currentColor: UIColor = .black
     
     //
     //MARK: - UI
@@ -13,9 +14,10 @@ class ColorPickerCell: TaskEditCell, TaskEditCellProtocol {
     override func setupUI() {
         setupMainStackView()
         
-        for t in [UIColor.systemRed, .systemBlue, .systemGreen, .systemPink]{
-            addColorPick(t)
+        for color in [UIColor.systemBlue, .systemGreen, .systemRed, .yellowSunrise, .aquamarine, .lightPurple, .systemGray]{
+            addColorPick(color)
         }
+        setInfo(.systemBlue)
     }
     
     //MARK: Main StackView
@@ -34,25 +36,37 @@ class ColorPickerCell: TaskEditCell, TaskEditCellProtocol {
     
     //MARK: - Color Picks
     private func addColorPick(_ color: UIColor){
+        
         let pick = ColorPickView()
         pick.color = color
         pick.addTarget(self, action: #selector(colorPickSelect), for: .touchUpInside)
         mainStackView.addArrangedSubview(pick)
+        
     }
     
-    @objc private func colorPickSelect(_ view: UIControl){
-        view.isSelected.toggle()
-        mainStackView.subviews.forEach { if $0 != view { ($0 as! ColorPickView).isSelected = false } }
+    @objc private func colorPickSelect(_ colorPick: UIControl){
+        
+        if let picker = (colorPick as? ColorPickView), colorPick.isSelected == false{
+            colorPick.isSelected = true
+            setInfo(picker.color)
+        }
+        
     }
     //
     //MARK: - Task Edit Cell Protocol
     //
     func getInfo() -> UIColor {
-        return .green
+        return currentColor
     }
     
     func setInfo(_ info: UIColor) {
+        currentColor = info
         
+        for color in mainStackView.arrangedSubviews{
+            if let picker = color as? ColorPickView {
+                picker.isSelected = picker.color == info
+            }
+        }
     }
     
 }
