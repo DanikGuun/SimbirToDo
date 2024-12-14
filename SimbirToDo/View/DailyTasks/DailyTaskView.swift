@@ -116,6 +116,14 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
         taskView.id = taskInfo.id
         taskView.backgroundColor = .clear
         
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        var timeString = ""
+        timeString.append(formatter.string(from: Date(timeIntervalSince1970: taskInfo.startTimeSeconds)))
+        timeString.append(" - ")
+        timeString.append(formatter.string(from: Date(timeIntervalSince1970: taskInfo.endTimeSeconds)))
+        taskView.time = timeString
+        
         let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(taskViewLongPressed))
         taskView.addGestureRecognizer(longGesture)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(taskViewTapped))
