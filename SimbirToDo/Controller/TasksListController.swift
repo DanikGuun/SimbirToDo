@@ -180,8 +180,16 @@ class TasksListController: UIViewController, TasksPresenterDelegate {
     //MARK: Task Presenting
     private func setTasksForDate(_ date: Date){
         taskPresenterView.clearTasks()
-        for task in generateTaskMetadata(date){
-            taskPresenterView.addTask(taskMeta: task)
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            let data = self.generateTaskMetadata(date)
+            for task in data{
+                
+                DispatchQueue.main.async{
+                    self.taskPresenterView.addTask(taskMeta: task)
+                }
+                
+            }
         }
     }
     
