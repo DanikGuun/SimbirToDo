@@ -11,7 +11,7 @@ class TaskEditContoller: UIViewController {
     private var applyBarItem: UIBarButtonItem!
     private var deleteBarItem: UIBarButtonItem!
     private var backButton: UIButton!
-    private var taskEditerTable: TaskEditerProtocol!
+    private var taskEditer: TaskEditerProtocol!
     
     
     //
@@ -55,7 +55,7 @@ class TaskEditContoller: UIViewController {
     }
     
     @objc private func applyBarItemPressed(){
-        guard let taskInfo = taskEditerTable.getInfo() else { return }
+        guard let taskInfo = taskEditer.getInfo() else { return }
         taskProcessBehavior?.process(with: taskInfo)
         self.navigationController?.popViewController(animated: true)
     }
@@ -119,10 +119,10 @@ class TaskEditContoller: UIViewController {
             style = .grouped
         }
         
-        taskEditerTable = TaskEditTableView(frame: .zero, style: style)
-        self.view.addSubview(taskEditerTable)
+        taskEditer = TaskEditTableView(frame: .zero, style: style)
+        self.view.addSubview(taskEditer)
         
-        taskEditerTable.snp.makeConstraints {[weak self] maker in
+        taskEditer.snp.makeConstraints {[weak self] maker in
             guard let self = self else { return }
             maker.leading.top.trailing.equalToSuperview()
             
@@ -134,7 +134,7 @@ class TaskEditContoller: UIViewController {
             }
         }
         
-        taskEditerTable.initialInfo = TaskInfo(task: taskProcessBehavior?.task)
+        taskEditer.initialInfo = TaskInfo(task: taskProcessBehavior?.task)
     }
 
     //

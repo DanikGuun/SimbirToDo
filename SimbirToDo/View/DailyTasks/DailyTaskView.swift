@@ -101,6 +101,7 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
         
         let startTaskOffset = taskInfo.startTimeSeconds / secondsPerDay
         let endTaskOffset = taskInfo.endTimeSeconds / secondsPerDay
+        print(Date(timeIntervalSince1970: taskInfo.startTimeSeconds))
 
         //если брать верхний констрейн и умножать на startTaskOffset, то не работает
         //Поэтому берем нижний + высоту
@@ -118,10 +119,11 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
+        
         var timeString = ""
-        timeString.append(formatter.string(from: Date(timeIntervalSince1970: taskInfo.startTimeSeconds)))
+        timeString.append(formatter.string(from: taskInfo.dateInterval.start))
         timeString.append(" - ")
-        timeString.append(formatter.string(from: Date(timeIntervalSince1970: taskInfo.endTimeSeconds)))
+        timeString.append(formatter.string(from: taskInfo.dateInterval.end))
         taskView.time = timeString
         
         let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(taskViewLongPressed))
