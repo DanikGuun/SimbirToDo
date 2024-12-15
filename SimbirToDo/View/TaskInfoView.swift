@@ -10,8 +10,8 @@ class TaskInfoView: UIControl {
     //Design
     var leftLineWidth: CGFloat = 4 { didSet { self.setNeedsDisplay() } }
     var cornerRadius: CGFloat = 5 { didSet { self.setNeedsDisplay() } }
-    override var isSelected: Bool{ didSet { backgroundAlpha = isSelected ? 0.8 : 0.3 } }
-    private var backgroundAlpha: CGFloat = 0.3 { didSet { self.setNeedsDisplay() } }
+    override var isSelected: Bool{ didSet { backgroundAlpha = isSelected ? 0.8 : 0.4 } }
+    private var backgroundAlpha: CGFloat = 0.4 { didSet { self.setNeedsDisplay() } }
     
     //Service
     var title: String? { didSet { self.titleLabel?.text = title } }

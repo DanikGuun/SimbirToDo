@@ -6,7 +6,7 @@ class TimeLineStackView: UIStackView {
     let contentLayout = UILayoutGuide()
 
     //SupplementaryView
-    var color: UIColor = .gray3 { didSet { updateSuplimentaryViewsAppearance() } }
+    var color: UIColor = .graySeparator { didSet { updateSuplimentaryViewsAppearance() } }
     var font = UIFont.systemFont(ofSize: 10, weight: .medium) { didSet { updateSuplimentaryViewsAppearance() } }
     
     var lineWidth: CGFloat = 2 { didSet { updateSuplimentaryViewsAppearance() } }
@@ -92,7 +92,7 @@ class TimeLineStackView: UIStackView {
 
 private class SupplementaryView: UIView {
     
-    var color: UIColor = .gray3 { didSet { self.setNeedsDisplay() } }
+    var color: UIColor = .graySeparator { didSet { self.setNeedsDisplay() } }
     
     var lineWidth: CGFloat = 2 { didSet { self.setNeedsDisplay() } }
     var leftInset: CGFloat = 10 { didSet { self.setNeedsDisplay() } }

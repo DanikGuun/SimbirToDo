@@ -126,8 +126,6 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
         timeString.append(formatter.string(from: taskInfo.dateInterval.end))
         taskView.time = timeString
         
-        let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(taskViewLongPressed))
-        taskView.addGestureRecognizer(longGesture)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(taskViewTapped))
         taskView.addGestureRecognizer(tapGesture)
     }
@@ -150,7 +148,4 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
         }
     }
     
-    @objc private func taskViewLongPressed(_ gesture: UILongPressGestureRecognizer){
-        
-    }
 }
