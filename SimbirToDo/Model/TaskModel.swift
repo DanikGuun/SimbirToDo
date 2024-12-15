@@ -33,8 +33,16 @@ class ToDoTask: Object {
     override init() {
         self.title = ""
         self.taskDescription = ""
-        self.dateStart = Date().timeIntervalSince1970
-        self.dateEnd = Date(timeIntervalSinceNow: 3600).timeIntervalSince1970
+        
+        //из-за округления до 5 минут, образуется десятичная часть, которая мешает сравнению
+        //поэтому прогоняем через компоненты
+        let nowDate = Date(timeIntervalSinceNow: -Date().timeIntervalSince1970.truncatingRemainder(dividingBy: 300))
+        let comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: nowDate)
+        
+        let startDate = Calendar.current.date(from: comps)!
+        let endDate = startDate.addingTimeInterval(3600)
+        self.dateStart = startDate.timeIntervalSince1970
+        self.dateEnd = endDate.timeIntervalSince1970
         
     }
 }
@@ -112,6 +120,14 @@ struct TaskInfo: CustomStringConvertible{
         }
         
         self.init(id: id, name: name, taskDescription: taskDescription, dateInterval: dateInterval, color: color)
+    }
+    
+    func isSimilaryTo(_ task: TaskInfo?) -> Bool{
+        guard let task else { return false }
+        return (name == task.name &&
+                taskDescription == task.taskDescription &&
+                dateInterval == task.dateInterval &&
+                color == task.color)
     }
     
     var description: String{

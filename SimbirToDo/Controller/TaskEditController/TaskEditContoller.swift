@@ -104,7 +104,13 @@ class TaskEditContoller: UIViewController {
             button.setTitleColor(.systemBlue, for: .normal)
         }
         
-        self.confirmAlert(title: "Вы уверены, что хотите Выйти?", message: "Изменения не сохранятся", accept: accept)
+        let processTaskInfo = TaskInfo(task: taskProcessBehavior?.task)
+        if processTaskInfo.isSimilaryTo(taskEditer.getInfo()){
+            accept()
+        }
+        else{
+            self.confirmAlert(title: "Вы уверены, что хотите Выйти?", message: "Изменения не сохранятся", accept: accept)
+        }
     }
     
     //

@@ -101,7 +101,6 @@ class DailyTaskView: UIView, TasksPresenterProtocol {
         
         let startTaskOffset = taskInfo.startTimeSeconds / secondsPerDay
         let endTaskOffset = taskInfo.endTimeSeconds / secondsPerDay
-        print(Date(timeIntervalSince1970: taskInfo.startTimeSeconds))
 
         //если брать верхний констрейн и умножать на startTaskOffset, то не работает
         //Поэтому берем нижний + высоту
