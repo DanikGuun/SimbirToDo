@@ -3,8 +3,10 @@ import RealmSwift
 
 class TaskManager{
     
+    private static let realm = try? Realm()
+    
     class func getTask(id: UUID?) -> ToDoTask? {
-        guard let realm = try? Realm(), let id = id else { return nil }
+        guard let realm = realm, let id = id else { return nil }
         return realm.objects(ToDoTask.self).first { $0.id == id }
     }
     

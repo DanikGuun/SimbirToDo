@@ -10,9 +10,20 @@
 		A3A17B0A00D6FE0BA1108458 /* Pods_SimbirToDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22117F4AB7103A551D3CCC8F /* Pods_SimbirToDo.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		566E3D292D12F6B500A8D8A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 56EF053D2CFD87410051EFA6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 56EF05442CFD87410051EFA6;
+			remoteInfo = SimbirToDo;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		22117F4AB7103A551D3CCC8F /* Pods_SimbirToDo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SimbirToDo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27997DF8770261062661933E /* Pods-SimbirToDo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SimbirToDo.debug.xcconfig"; path = "Target Support Files/Pods-SimbirToDo/Pods-SimbirToDo.debug.xcconfig"; sourceTree = "<group>"; };
+		566E3D252D12F6B500A8D8A8 /* SimbirToDoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SimbirToDoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		56EF05452CFD87410051EFA6 /* SimbirToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimbirToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BD2E1DC8F4AC8E51D45C33F /* Pods-SimbirToDo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SimbirToDo.release.xcconfig"; path = "Target Support Files/Pods-SimbirToDo/Pods-SimbirToDo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -28,6 +39,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		566E3D262D12F6B500A8D8A8 /* SimbirToDoTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SimbirToDoTests;
+			sourceTree = "<group>";
+		};
 		56EF05472CFD87410051EFA6 /* SimbirToDo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -39,6 +55,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		566E3D222D12F6B500A8D8A8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		56EF05422CFD87410051EFA6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -63,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				56EF05472CFD87410051EFA6 /* SimbirToDo */,
+				566E3D262D12F6B500A8D8A8 /* SimbirToDoTests */,
 				56EF05462CFD87410051EFA6 /* Products */,
 				0510790BE64ADAF43539F731 /* Pods */,
 				8CC70CE21E122A9A12327D79 /* Frameworks */,
@@ -73,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				56EF05452CFD87410051EFA6 /* SimbirToDo.app */,
+				566E3D252D12F6B500A8D8A8 /* SimbirToDoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,6 +113,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		566E3D242D12F6B500A8D8A8 /* SimbirToDoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 566E3D2D2D12F6B500A8D8A8 /* Build configuration list for PBXNativeTarget "SimbirToDoTests" */;
+			buildPhases = (
+				566E3D212D12F6B500A8D8A8 /* Sources */,
+				566E3D222D12F6B500A8D8A8 /* Frameworks */,
+				566E3D232D12F6B500A8D8A8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				566E3D2A2D12F6B500A8D8A8 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				566E3D262D12F6B500A8D8A8 /* SimbirToDoTests */,
+			);
+			name = SimbirToDoTests;
+			packageProductDependencies = (
+			);
+			productName = SimbirToDoTests;
+			productReference = 566E3D252D12F6B500A8D8A8 /* SimbirToDoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		56EF05442CFD87410051EFA6 /* SimbirToDo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 56EF05582CFD87420051EFA6 /* Build configuration list for PBXNativeTarget "SimbirToDo" */;
@@ -117,9 +165,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
+					566E3D242D12F6B500A8D8A8 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 56EF05442CFD87410051EFA6;
+					};
 					56EF05442CFD87410051EFA6 = {
 						CreatedOnToolsVersion = 16.0;
 					};
@@ -140,11 +192,19 @@
 			projectRoot = "";
 			targets = (
 				56EF05442CFD87410051EFA6 /* SimbirToDo */,
+				566E3D242D12F6B500A8D8A8 /* SimbirToDoTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		566E3D232D12F6B500A8D8A8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		56EF05432CFD87410051EFA6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -197,6 +257,13 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		566E3D212D12F6B500A8D8A8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		56EF05412CFD87410051EFA6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -206,7 +273,53 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		566E3D2A2D12F6B500A8D8A8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 56EF05442CFD87410051EFA6 /* SimbirToDo */;
+			targetProxy = 566E3D292D12F6B500A8D8A8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		566E3D2B2D12F6B500A8D8A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = C8NSZM8WF9;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ddev.SimbirToDoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SimbirToDo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SimbirToDo";
+			};
+			name = Debug;
+		};
+		566E3D2C2D12F6B500A8D8A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = C8NSZM8WF9;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ddev.SimbirToDoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SimbirToDo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SimbirToDo";
+			};
+			name = Release;
+		};
 		56EF05592CFD87420051EFA6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 27997DF8770261062661933E /* Pods-SimbirToDo.debug.xcconfig */;
@@ -389,6 +502,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		566E3D2D2D12F6B500A8D8A8 /* Build configuration list for PBXNativeTarget "SimbirToDoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				566E3D2B2D12F6B500A8D8A8 /* Debug */,
+				566E3D2C2D12F6B500A8D8A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		56EF05402CFD87410051EFA6 /* Build configuration list for PBXProject "SimbirToDo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
